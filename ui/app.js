@@ -47,7 +47,7 @@ const recipeSearchText=new Map();
 const bundlePath=document.querySelector('script[data-bundle]')?.dataset.bundle;
 const bundleUrl=bundlePath?new URL(bundlePath,document.baseURI).href:null;
 const drawerHomes={'recipes-dialog':['.recipe-panel','#recipes-home'],'inspector-dialog':['.inspector','#inspector-home'],'inventory-dialog':['.stash-panel','#inventory-home']};
-function openDrawer(id){hideTooltip();if(id==='recipes-dialog'&&view==='workshop'&&innerWidth>=900){$('#recipe-search').focus();return;}const [panel]=drawerHomes[id],dialog=$(`#${id}`);dialog.append($(panel));dialog.showModal();if(id==='recipes-dialog')$('#recipe-search').focus();}
+function openDrawer(id){hideTooltip();const [panel]=drawerHomes[id],dialog=$(`#${id}`);dialog.append($(panel));dialog.showModal();if(id==='recipes-dialog')$('#recipe-search').focus();}
 function restoreDrawer(id){const entry=drawerHomes[id];if(entry){const [panel,home]=entry;if($(panel).parentElement===$(`#${id}`))$(home).after($(panel));}hideTooltip();}
 function closeDialog(id){$(`#${id}`).close();restoreDrawer(id);}
 for(const id of Object.keys(drawerHomes))$(`#${id}`).addEventListener('close',()=>restoreDrawer(id));

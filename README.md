@@ -1,8 +1,8 @@
-> **Player test release 1.0.0:** The Windows EXE packages the current Cube workspace, separate Add ingredients / Craft actions, saved result comparisons and explicit star-roll outcomes. See [player testing](PLAYER-TESTING.md), [desktop instructions](DESKTOP.md) and [current native evidence and remaining limitations](research/current/VERIFIED_RULES.md).
+> **Player test release 1.0.1:** The Windows EXE packages the current Cube workspace, separate Add ingredients / Craft actions, saved result comparisons and explicit star-roll outcomes. See [player testing](PLAYER-TESTING.md), [desktop instructions](DESKTOP.md) and [current native evidence and remaining limitations](research/current/VERIFIED_RULES.md).
 
 # HSCraftSim — Cube Workshop
 
-A Hero Siege Cube crafting simulator with original game assets and an English interface. Version 1.0.0. Runs locally or as a static website.
+A Hero Siege Cube crafting simulator with original game assets and an English interface. Version 1.0.1. Runs locally or as a static website.
 
 ## Start
 

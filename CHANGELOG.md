@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Fixed Recipes on desktop: the button and R / slash shortcuts now open the recipe browser instead of only focusing the search field in the bottom panel.
+- Added browser regression coverage for opening, searching, selecting and closing recipes at five viewport sizes without changing items, RNG or History.
+
 ## 1.0.0
 
 First GitHub player test release of HSCraftSim.

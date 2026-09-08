@@ -1,0 +1,69 @@
+/* Persistent creator credit and community links, shared by web and desktop. */
+.game-skin .brand small.creator-credit {
+  display:block;font:11px/1.3 'Segoe UI',sans-serif;letter-spacing:.2px;
+  color:#b8a895;margin-top:3px;
+}
+.creator-credit strong {color:#e2c992;font-weight:600}
+.game-skin main#application {grid-template-rows:var(--workbench-row,40px) minmax(0,1fr) auto}
+.game-skin .community-footer {
+  min-height:37px;padding:3px 2px 0;gap:12px;font:11px/1.3 'Segoe UI',sans-serif;
+  border-top:1px solid #35262b;margin-top:3px;color:#b3a18e;
+}
+.community-footer nav {display:flex;align-items:center;justify-content:flex-end;gap:12px;min-width:0;margin-left:auto}
+.game-skin .community-footer a,.game-skin .community-footer button {
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:30px;padding:3px 5px;background:transparent;border:1px solid transparent;
+  color:#d4c4aa;font:12px/1.3 'Segoe UI',sans-serif;white-space:nowrap;
+}
+.game-skin .community-footer a:hover,.game-skin .community-footer button:hover {color:#f7e4bd;background:#23131b;border-color:#624436}
+.discord-icon {width:16px;height:16px;flex:none;color:#c4b29a}
+.game-skin .community-footer #about-open {border-left-color:#574035;padding-left:14px;color:#e4cb93}
+.game-skin .about-dialog {width:min(650px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0}
+.about-dialog[open] {display:flex;flex-direction:column}
+.about-dialog>.dialog-heading,.about-dialog>.dialog-bottom {flex:none}
+.game-skin .about-dialog .dialog-heading {padding:18px 22px;gap:14px}
+.game-skin .about-dialog .eyebrow {font:10px/1.5 'Segoe UI',sans-serif;letter-spacing:1.4px;color:#bba281}
+.about-body {overflow:auto;overscroll-behavior:contain;min-height:0;padding:22px;color:#ccbdaa;font:13px/1.65 'Segoe UI',sans-serif}
+.about-intro {display:flex;align-items:center;gap:15px;margin:0 0 23px}
+.about-intro>img {width:36px;height:45px;object-fit:contain;image-rendering:pixelated}
+.game-skin .about-intro h3 {font:30px/1.2 FontinCaps,serif;color:#eed8a0}
+.about-intro p {color:#b9a998;margin-top:4px}
+.credit-cards {display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.credit-card {border:1px solid #5a3c3b;background:linear-gradient(150deg,#241319,#100b0e);padding:18px;min-width:0}
+.creator-card {border-top:2px solid #d0ac68}
+.host-card {border-top:2px solid #987b88}
+.credit-role {font:11px/1.4 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#c2a881}
+.game-skin .credit-card h3 {font:30px/1.3 FontinCaps,serif;margin:5px 0 8px;color:#edcf91}
+.game-skin .host-card h3 {color:#ddc6d0}
+.credit-description {font-size:12px;min-height:40px;color:#c5b6a5}
+.credit-discord {display:flex;flex-direction:column;gap:4px;margin-top:15px;padding:11px 12px;border:1px solid #705145;background:#301821;color:#f0dcb4;font-size:13px}
+.credit-discord:hover {border-color:#c2a06b;background:#47202c;color:#fff0cf}
+.credit-discord>span {display:flex;justify-content:space-between;gap:10px}
+.credit-discord small {font:11px/1.4 'Segoe UI',sans-serif;color:#c9b9a7}
+.about-link-note {font-size:11px;color:#ae9c8d;margin:12px 0 22px}
+.about-game-credit {border-top:1px solid #473039;padding-top:16px}
+.game-skin .about-game-credit h3 {font:17px/1.4 FontinCaps,serif;color:#d8bd91;margin-bottom:5px}
+.about-game-credit p {font-size:12px;color:#b4a698}
+.game-skin .about-dialog .dialog-bottom {padding:13px 22px;gap:12px}
+.game-skin .about-dialog .dialog-bottom button {min-height:34px;font-size:12px}
+.game-skin .about-dialog #footer-info {background:transparent;border:0;color:#d3bb8c;padding-left:0;text-align:left}
+@media(max-width:1050px) {.game-skin .community-footer .save-status {display:none}}
+@media(max-width:899px) {.game-skin main#application {--workbench-row:36px}}
+@media(max-width:649px) {
+  .game-skin .community-footer {min-height:38px;justify-content:center;padding:2px 0 0;gap:0}
+  .community-footer nav {margin:0;width:100%;justify-content:space-between;gap:2px}
+  .game-skin .community-footer a,.game-skin .community-footer button {font-size:10px;gap:4px;padding:3px 2px;min-height:32px}
+  .game-skin .community-footer #about-open {padding-left:7px}
+  .discord-icon {width:13px;height:13px}
+  .game-skin .about-dialog .dialog-heading {padding:14px}
+  .game-skin .about-dialog .dialog-heading h2 {font-size:23px}
+  .about-body {padding:16px}
+  .credit-cards {grid-template-columns:1fr;gap:12px}
+  .credit-card {padding:14px}
+  .credit-description {min-height:0}
+  .credit-discord {margin-top:12px}
+  .about-intro {margin-bottom:18px}
+  .game-skin .about-dialog .dialog-bottom {padding:10px 14px;gap:8px}
+  .game-skin .about-dialog .dialog-bottom button {font-size:11px;padding:6px}
+}
+@media(max-height:650px) and (min-width:651px) {.game-skin main#application {--workbench-row:32px}}

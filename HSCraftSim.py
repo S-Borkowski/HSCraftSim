@@ -29,6 +29,7 @@ def main():
         webview.settings['ALLOW_DOWNLOADS'] = True
         webview.settings['ALLOW_FILE_URLS'] = False
         webview.settings['OPEN_DEVTOOLS_IN_DEBUG'] = False
+        webview.settings['OPEN_EXTERNAL_LINKS_IN_BROWSER'] = True
         window = webview.create_window(f'HSCraftSim {build_info["version"]} · Cube Workshop', url, js_api=store,
             width=1520, height=900, min_size=(900, 600), background_color='#0b1119',
             text_select=True, hidden=bool(args.self_test))
@@ -63,7 +64,7 @@ def main():
         result = {'ok': False, 'version': build_info['version'], 'buildRevision': build_info['revision']}
 
         def verify_renderer():
-            # Read-only diagnostics for source and frozen builds, in the actual WebView2 runtime.
+            # Startup and non-destructive navigation checks in the actual WebView2 runtime.
             try:
                 deadline = time.monotonic() + 45
                 while time.monotonic() < deadline:
@@ -88,6 +89,30 @@ def main():
                     time.sleep(.1)
                 if not result['ok']:
                     result['error'] = 'The embedded workshop did not reach its ready state.'
+                else:
+                    credits = window.evaluate_js("""(() => {
+                        const trigger = document.querySelector('#about-open');
+                        const dialog = document.querySelector('#about');
+                        trigger.focus(); trigger.click();
+                        const rect = dialog.getBoundingClientRect();
+                        const links = [...dialog.querySelectorAll('a')].map(a => ({url:a.href, target:a.target, rel:a.rel}));
+                        const checks = {
+                            opened: dialog.open,
+                            creator: document.querySelector('.creator-credit').textContent.trim(),
+                            host: document.querySelector('#host-name').textContent.trim(),
+                            fits: rect.left >= 0 && rect.top >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight,
+                            links
+                        };
+                        dialog.querySelector('[data-close="about"]').click();
+                        checks.closed = !dialog.open;
+                        checks.focusRestored = document.activeElement === trigger;
+                        return checks;
+                    })()""")
+                    result['credits'] = credits
+                    expected_links = ['https://discord.gg/3wWfYubgb3', 'https://discord.gg/fDtXAQu5c3']
+                    result['ok'] = all(credits.get(key) for key in ['opened', 'fits', 'closed', 'focusRestored']) and credits['creator'] == 'Created by Falor' and credits['host'] == 'Graxy_TV' and [link['url'] for link in credits['links']] == expected_links and all(link['target'] == '_blank' and 'noopener' in link['rel'] for link in credits['links'])
+                    if not result['ok']:
+                        result['error'] = 'About / Credits navigation or community links failed verification.'
                 flush_session()
                 result['sessionSaved'] = store.path.is_file()
                 result['frozen'] = bool(getattr(sys, 'frozen', False))

@@ -1,4 +1,4 @@
-# HSCraftSim 1.0.1 — Player test build
+# HSCraftSim 1.0.2 — Player test build
 
 Extract the ZIP, then open HSCraftSim.exe. Windows 10/11 x64 and Microsoft Edge WebView2 Runtime are required. Python, Node.js and a Hero Siege installation are not required. The app works offline once WebView2 is installed.
 
@@ -22,7 +22,7 @@ Gypsy's Prophecy and Destiny Shard roll independently: 70% star increase, 22% st
 
 Please include:
 
-- App version: 1.0.1, and the Hero Siege version used for comparison.
+- App version: 1.0.2, and the Hero Siege version used for comparison.
 - Recipe and item names, starting stars, sockets and corruption state.
 - Steps to reproduce, expected result and actual result.
 - A screenshot of the problem and, when comparing with the game, its before/after tooltips.

@@ -1,6 +1,6 @@
 # HSCraftSim for Windows
 
-Release 1.0.1 is a player test build. See PLAYER-TESTING.txt in the release ZIP for the quick start, test scope and bug-report template.
+Release 1.0.2 is a player test build. See PLAYER-TESTING.txt in the release ZIP for the quick start, test scope and bug-report template.
 
 Extract the release ZIP and open **HSCraftSim.exe**. Python, Node.js and the game are not required on the player's computer. The EXE includes the website, assets and Python desktop host; it opens its own application window and works offline after prerequisites are installed.
 

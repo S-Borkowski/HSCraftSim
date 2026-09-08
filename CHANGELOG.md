@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- Added persistent Created by Falor credit and direct Falor / Graxy_TV Discord links.
+- Added About / Credits with separate creator, host, community and game credits.
+- Discord links open externally so the Cube session stays in the simulator.
+
 ## 1.0.1
 
 - Fixed Recipes on desktop: the button and R / slash shortcuts now open the recipe browser instead of only focusing the search field in the bottom panel.

@@ -39,7 +39,13 @@ try{
     const base=new URL(index.match(/<base href="([^"]+)"/)[1],origin+mount);
     for(const match of index.matchAll(/(?:src|href|data-bundle)="([^"]+)"/g)){
       if(match[0].startsWith('href=')&&match[1].startsWith('./assets/'))continue;
-      const url=new URL(match[1],base);assert.ok(url.pathname.startsWith(mount));
+      const url=new URL(match[1],base);
+      if(url.origin!==new URL(origin).origin){
+        assert.equal(url.protocol,'https:','External links must use HTTPS');
+        assert.ok(['https://discord.gg/3wWfYubgb3','https://discord.gg/fDtXAQu5c3'].includes(url.href),'Unexpected external link');
+        continue;
+      }
+      assert.ok(url.pathname.startsWith(mount));
       const response=await fetch(url);assert.equal(response.status,200,`Missing HTML asset: ${url}`);
     }
     const sim=await loadData('',new URL('../data/runtime.bin',base).href);

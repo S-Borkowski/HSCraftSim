@@ -1,8 +1,8 @@
-> **Player test release 1.0.1:** The Windows EXE packages the current Cube workspace, separate Add ingredients / Craft actions, saved result comparisons and explicit star-roll outcomes. See [player testing](PLAYER-TESTING.md), [desktop instructions](DESKTOP.md) and [current native evidence and remaining limitations](research/current/VERIFIED_RULES.md).
+> **Player test release 1.0.2:** The Windows EXE packages the current Cube workspace, separate Add ingredients / Craft actions, saved result comparisons and explicit star-roll outcomes. See [player testing](PLAYER-TESTING.md), [desktop instructions](DESKTOP.md) and [current native evidence and remaining limitations](research/current/VERIFIED_RULES.md).
 
 # HSCraftSim — Cube Workshop
 
-A Hero Siege Cube crafting simulator with original game assets and an English interface. Version 1.0.1. Runs locally or as a static website.
+A Hero Siege Cube crafting simulator with original game assets and an English interface. Version 1.0.2. Runs locally or as a static website.
 
 ## Start
 
@@ -18,6 +18,7 @@ Opening `index.html` directly from disk now displays an English launcher guide i
 
 ## Workshop
 
+- **Created by Falor** stays visible under the logo. The footer links to Falor's Discord for bug reports and feedback, Graxy_TV's Discord for community, and **About / Credits** for creator, host and game credits. Discord opens externally and leaves the Cube session in place.
 - The workspace fits the viewport: Cube, recipe and Last craft share three columns on desktop. Long recipe lists and item details scroll within their panels. Below 650 pixels, Cube and Selected recipe tabs share the same workspace while the result summary and craft controls remain visible.
 - **Recipes** opens the searchable recipe browser. Filter by category, favorites, or recipes ready to craft.
 - **Item catalog** is always available in the header. Hover for stats and descriptions; click to add an item.

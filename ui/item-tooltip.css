@@ -1,0 +1,22 @@
+/* Original game frame and Fontin; bounds keep long descriptions on screen. */
+.item-tooltip{position:fixed;inset:auto;margin:0;padding:12px 14px;width:min(365px,calc(100vw - 24px));max-width:none;max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;border:7px solid #665548;border-image:url('../data/game/Tooltip_Back_Sprite_spr_0.png') 4 stretch;border-radius:0;background:rgba(9,11,15,.98);box-shadow:0 8px 38px #000b,inset 0 0 25px #16111a;color:#d3d0c7;font:14px/1.45 Fontin,serif;pointer-events:none;z-index:10000;text-align:left}
+.item-tooltip::backdrop{background:transparent;pointer-events:none}
+:is(.item-tooltip,.setup-preview) .hover-heading{display:flex;align-items:center;gap:12px;padding:3px 0 13px}
+:is(.item-tooltip,.setup-preview) .hover-heading img{width:42px;height:48px;object-fit:contain;flex-shrink:0}
+:is(.item-tooltip,.setup-preview) .hover-heading>div{flex:1;min-width:0}
+:is(.item-tooltip,.setup-preview) .hover-heading h3{color:var(--item-color);font:20px/1.2 FontinCaps,serif;overflow-wrap:anywhere;margin:0 0 6px}
+:is(.item-tooltip,.setup-preview) .hover-heading p{font:12px Fontin,serif;color:#a4a19a}
+:is(.item-tooltip,.setup-preview) .hover-tier{color:var(--item-color);border:1px solid #5e5140;font:14px FontinCaps,serif;padding:2px 6px;align-self:start}
+.hover-stats{border-top:1px solid transparent;border-image:url('../data/game/Hud_Tooltip_Line_spr_0.png') 1 stretch;padding-top:10px}
+.hover-stat{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:3px 0;color:#96bfe5}
+.hover-stat>span{overflow-wrap:anywhere}.hover-stat>b{color:#b6ccec;font-weight:400;flex-shrink:0}
+.hover-stat.hover-generated{color:#98c6ae}.hover-stat.hover-generated>b{color:#b8dec9}
+.hover-effect{padding:5px 0;color:#93badd}:is(.item-tooltip,.setup-preview) .hover-effect>span{display:block;font-size:12px;color:#9c9eae}:is(.item-tooltip,.setup-preview) .hover-effect>strong{font-size:14px;font-weight:400;color:#b8cfee}
+.hover-description{margin:13px 0 4px;white-space:pre-line;color:#dfd6c3}.hover-lore{margin:13px 0 3px;color:#b99e75;font-style:italic;white-space:pre-line}
+.hover-flags{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 12px;color:#dd7969;font-size:12px;text-transform:uppercase;margin-bottom:10px}
+.hover-sockets{margin-top:12px;text-align:center;font-size:12px;color:#a79c88}.hover-sockets>div{display:flex;justify-content:center;gap:8px;margin-top:6px}.hover-sockets i{display:block;width:15px;height:15px;border:2px solid #655b53;border-radius:50%;background:#03070b;box-shadow:inset 0 0 3px #000,0 1px 0 #91816b}
+:is(.item-tooltip,.setup-preview) .hover-note{display:block;padding-top:10px;margin-top:10px;border-top:1px solid #292b31;color:#9e8c7b;font:10px/1.5 'Segoe UI',sans-serif}
+.ingredient-group{min-width:0}.ingredient-alternatives{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:9px 0 5px}.ingredient-alternatives>small{grid-column:1/-1;color:#9b9489;font-size:11px}
+.ingredient-alternatives>button{display:flex;align-items:center;gap:7px;padding:5px 7px;text-align:left;font-size:11px;background:#0d1117;border-color:#2a3038}.ingredient-alternatives>button[aria-pressed=true]{color:#e0bd88;border-color:#886743;background:#b98c4210}.ingredient-alternatives img{width:20px;height:22px;object-fit:contain;flex-shrink:0}
+.recipe-output{display:grid;grid-template-columns:34px minmax(0,1fr);column-gap:10px;align-items:center;padding:12px;margin-top:14px;background:#a4874610;border:1px solid #8f734448;border-radius:4px}.recipe-output>span{grid-column:1/-1;font-size:9px;letter-spacing:2px;color:#998263;margin-bottom:7px}.recipe-output>img{width:30px;height:34px;object-fit:contain;grid-row:span 2}.recipe-output>strong{color:#d6bb8a;font:17px Fontin,serif}.recipe-output>small{grid-column:2;font-size:10px;color:#9b988e}
+.inspector-description,.inspector-lore{font:13px/1.5 Fontin,serif;margin-top:15px;color:#bdb6a8;white-space:pre-line;clear:both}.inspector-lore{font-style:italic;color:#a99577}

@@ -1,0 +1,15 @@
+{
+  "name": "hs-craft-sim",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python server.py",
+    "test": "node tests/test_mechanics.mjs && node tests/test_workshop.mjs && node tests/test_editor_model.mjs && node tests/test_cube_experience.mjs && node tests/test_random_sessions.mjs && node tests/test_startup.mjs && node tests/test_item_setup.mjs && node tests/test_current_modifiers.mjs && node tests/test_socket_totals.mjs && node tests/test_history_catalog.mjs && node tests/test_codex.mjs && node tests/test_recipe_context.mjs && node tests/test_codex_effects.mjs && node tests/test_runewords.mjs && node tests/test_current_crafts.mjs && node tests/test_base_order.mjs && node tests/test_base_ranges.mjs && node tests/test_current_equipment_sockets.mjs && node tests/test_native_craft_cases.mjs && node tests/test_dawn_sockets.mjs && node tests/test_natural_sockets.mjs && node tests/test_current_generated.mjs && node tests/test_special_stats.mjs && node tests/test_socket_lifecycle.mjs && node tests/test_normal_state.mjs && node tests/test_normal_affixes.mjs && node tests/test_equipment_affixes.mjs && node tests/test_full_codex.mjs && node tests/test_item_display.mjs && node tests/test_orb_word_rolls.mjs && node tests/test_word_matching.mjs && node tests/test_forced_normal.mjs && node tests/test_normal_names.mjs && node tests/test_full_word_pipeline.mjs && node tests/test_socket_levels.mjs && node tests/test_vault_craft.mjs && node tests/test_player_context.mjs && node tests/test_socket_restrictions.mjs && node tests/test_craft_action.mjs",
+    "check": "node --check ui/app.js && node --check engine/validation.js && node --check engine/session.js && node --check engine/stat_model.js && node --check engine/analysis-worker.js && node --check tools/build-web.mjs && node --check ui/startup.js && node --check ui/desktop-storage.js && node --check ui/item-setup.js && node --check engine/item_setup.js && node --check ui/history-view.js && node --check engine/history.js && node --check engine/catalog_target.js && node --check engine/codex.js && node --check ui/codex-workshop.js && node --check engine/current_unique_generation.js && node --check engine/special_stats.js && node --check engine/normal_state.js && node --check engine/normal_affixes.js && node --check engine/item_display.js && node --check engine/normal_names.js && node --check engine/socket_levels.js && node --check engine/vaults.js && node --check ui/probability-format.js && node --check engine/craft_action.js && node --check ui/last-craft.js && node --check ui/craft-outcome.js",
+    "build": "node tools/build-web.mjs",
+    "preview": "python -m http.server 17880 --bind 127.0.0.1 --directory dist",
+    "test:web": "npm run build && node tests/test_web_build.mjs",
+    "verify": "npm test && npm run check && npm run test:web"
+  }
+}

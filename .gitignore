@@ -1,0 +1,39 @@
+# Generated builds and player distributions (published as Release assets).
+/build/
+/dist/
+/release/
+/node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Personal sessions, runtime profiles, credentials and test output.
+/tests/_output/
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.key
+session.json
+session-*.tmp
+desktop.lock
+launcher-error.log
+save-error.log
+WebView2/
+.DS_Store
+Thumbs.db
+
+# Original game binaries, reverse-engineering databases and scratch captures.
+*.exe
+*.dll
+*.win
+*.aurie_backup
+/research/*
+!/research/current/
+/research/current/*
+!/research/current/*.md
+!/research/current/*.json
+!/research/current/*.jsonl
+!/research/current/*.py

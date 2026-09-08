@@ -1,0 +1,20 @@
+.codex-nav{color:var(--gold,#dfbd86);white-space:nowrap}
+.codex-guide{border:1px solid #354854;background:linear-gradient(125deg,#17242b,#111a21);border-radius:12px;padding:16px;margin-bottom:18px}
+.codex-guide-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.08em;color:#c4d6da}
+.codex-guide-top span{letter-spacing:0;color:#98adb8}
+.codex-guide p,.codex-setup p{font-size:12px;line-height:1.6;color:#a9b9c5;margin:12px 0}
+.codex-sequence{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:16px 0}
+.codex-sequence li{position:relative;display:flex;flex:1 1 62px;flex-direction:column;align-items:center;gap:7px;background:#0c141b;border:1px solid #30424e;border-radius:8px;padding:10px 6px;font-size:11px;text-align:center}
+.codex-sequence li b{position:absolute;left:5px;top:3px;font-size:10px;color:#8b9ea9}
+.codex-sequence img{width:30px;height:30px;object-fit:contain;image-rendering:pixelated}
+.codex-result{display:flex;flex-direction:column;gap:7px;border-left:2px solid #dabc85;padding:8px 12px;margin:12px 0 16px;color:#e3c798}
+.codex-result>span{font-size:9px;letter-spacing:.15em;color:#aabaac}.codex-result small{color:#b6c8cc;line-height:1.5}
+.codex-setup-note{display:block;color:#91a4b1;font-size:11px;line-height:1.6;margin-top:9px}
+.codex-guide details{border-top:1px solid #30404b;margin-top:16px;padding-top:12px;font-size:12px;color:#b9c7cc}.codex-guide summary,.codex-setup summary{cursor:pointer}
+.codex-inspector .game-item-card{padding:16px;border:0;box-shadow:none;background:transparent;min-width:0;width:100%}
+.codex-inspector .hover-heading h3{font-size:20px}.codex-inspector .hover-heading img{width:38px;height:38px}.codex-inspector .hover-stat{font-size:14px;gap:12px;align-items:start}.codex-inspector .hover-stat b{text-align:right;white-space:normal}
+.codex-setup{padding:16px;border-top:1px solid #2c3c49}.codex-setup>summary{font-size:13px;color:#d6c098}
+.codex-setup label{display:flex;flex-direction:column;gap:6px;font-size:11px;color:#a9b9c5;margin-top:12px;min-width:0}.codex-setup select,.codex-setup input{width:100%;min-width:0;box-sizing:border-box;padding:9px}
+.codex-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.codex-setup>button{width:100%}
+.codex-links{display:flex;flex-wrap:wrap;gap:6px}.codex-links button{font-size:11px;padding:6px}
+@media(max-width:760px){.codex-nav{padding:7px;font-size:11px}.codex-sequence li{flex-basis:52px}}

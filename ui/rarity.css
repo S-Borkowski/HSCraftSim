@@ -1,0 +1,53 @@
+/* Primary actions stay dark in every view, including modal dialogs. */
+body button.primary,body .inspector-actions .configure-item,body .top-actions #header-catalog {
+  background:linear-gradient(180deg,#39242c,#24171e);
+  color:#fff0df;border:1px solid #916b63;
+  box-shadow:inset 0 1px 0 #ffffff0b;
+  font-weight:600;
+}
+body button.primary:hover:not(:disabled),body .inspector-actions .configure-item:hover:not(:disabled),body .top-actions #header-catalog:hover:not(:disabled) {
+  background:linear-gradient(180deg,#4c2e38,#34212a);color:#fff8ef;border-color:#bd9282;
+}
+body button.primary:disabled,body .inspector-actions .configure-item:disabled,body .top-actions #header-catalog:disabled {
+  background:#1b171c;color:#a39a9e;border-color:#494047;opacity:1;box-shadow:none;
+}
+body button.primary:focus-visible {outline-color:#e3c3ae;outline-offset:3px}
+
+/* Rarity is an accent on dark surfaces, never a pale filled button. */
+.picker-rarities {padding:0 22px 14px}
+.rarity-filter-heading {display:flex;align-items:center;justify-content:space-between;min-height:25px;margin-bottom:7px}
+.rarity-filter-heading>span {font:600 10px 'Segoe UI',sans-serif;letter-spacing:1.8px;color:#a4989c}
+body .rarity-filter-heading button {padding:3px 0;background:none;border:0;font:11px 'Segoe UI',sans-serif;color:#b7aeb3}
+body .rarity-filter-heading button:hover {background:none;color:#fff0df}
+.picker-rarities .picker-shortcuts {display:flex;flex-wrap:wrap;gap:7px;padding:0}
+body .picker-shortcuts .rarity-filter {
+  --item-color:#cfcfcf;
+  display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:7px 11px;
+  border:1px solid #393038;border-radius:7px;background:#100d12;
+  color:var(--item-color);font:12px 'Segoe UI',sans-serif;line-height:1;
+  transition:background .15s,border-color .15s,box-shadow .15s;
+}
+.rarity-filter>i {width:6px;height:6px;flex:none;border-radius:50%;background:var(--item-color)}
+.rarity-filter>small {font:10px 'Segoe UI',sans-serif;color:#a79ca6;min-width:12px;text-align:right;font-variant-numeric:tabular-nums}
+body .picker-shortcuts .rarity-filter:hover:not(:disabled) {
+  color:var(--item-color);background:#211923;border-color:var(--item-color);
+}
+body .picker-shortcuts .rarity-filter[aria-pressed=true] {
+  background:#211b25;border-color:var(--item-color);color:var(--item-color);
+  box-shadow:inset 0 -2px 0 var(--item-color);
+}
+.rarity-filter[aria-pressed=true]>small {color:#e6dde5}
+body .picker-shortcuts .rarity-filter:disabled {opacity:.4;cursor:not-allowed}
+body .catalog-item,.game-skin .catalog-item {border-left:2px solid var(--item-color,#cfcfcf)}
+body .catalog-item:hover,.game-skin .catalog-item:hover {border-color:var(--item-color,#cfcfcf);background:#1d151f}
+body .catalog-item strong,body .catalog-item.unique strong {color:var(--item-color,#cfcfcf)}
+.catalog-item .catalog-rarity {color:var(--item-color,#cfcfcf);font-style:normal}
+body .dialog-heading .rarity-name,body .item-hero .rarity-name,
+body .recent-craft-item .rarity-name,body .snapshot-heading .rarity-name,
+body .comparison-title .rarity-name,body .journal-item-name.rarity-name {color:var(--item-color,#cfcfcf)}
+.game-item-card .hover-heading p .rarity-name {color:var(--item-color,#cfcfcf)}
+@media(max-width:650px) {
+  .picker-rarities {padding:0 14px 10px}
+  .picker-rarities .picker-shortcuts {gap:5px}
+  body .picker-shortcuts .rarity-filter {padding:7px 8px;gap:6px;font-size:11px;min-height:32px}
+}

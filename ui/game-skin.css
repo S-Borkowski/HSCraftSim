@@ -1,0 +1,338 @@
+/* Original Hero Siege sprites, with a viewport-sized crafting stage and recipe book. */
+.game-skin {
+  --bg:#080607;--panel:#0c090a;--line:#392a2c;--gold:#cfbd7d;
+  --muted:#a69c8b;--text:#ded7c3;--green:#83c46b;
+  background:#060506;color:var(--text);
+}
+.game-skin button,.game-skin input,.game-skin select,.game-skin .search-field {
+  border-radius:0;background-color:#0b090b;border-color:#473334;color:#c9bca4;
+}
+.game-skin button:focus-visible {outline:2px solid #d6bd7c;outline-offset:2px}
+.game-skin button:hover:not(:disabled) {background-color:#261216;border-color:#86604d;color:#f3dea2}
+.game-skin .panel,.game-skin dialog {
+  border-radius:0;border-color:#3c292c;background:#0b080a;box-shadow:none;
+}
+.game-skin .topbar {
+  background:#0a0709;border-bottom:3px double #493134;box-shadow:0 2px 0 #000;
+  flex-basis:54px;height:54px!important;padding:0 18px;gap:18px;backdrop-filter:none;
+}
+.game-skin .brand {font:22px FontinCaps,serif;color:#d7c58e}
+.game-skin .brand small {font:7px 'Segoe UI',sans-serif;color:#9b8878;letter-spacing:2px}
+.game-skin .topbar nav {background:none;border:0;border-radius:0;padding:0;gap:3px}
+.game-skin .nav-button {font:15px FontinCaps,serif;color:#aa977a;height:34px;letter-spacing:.2px}
+.game-skin .nav-button.active {
+  color:#f0d99c;background:#301016;border-bottom:2px solid #977245!important;box-shadow:none;
+}
+.game-skin .top-actions {gap:7px}
+.game-skin .top-actions #header-catalog,.game-skin .codex-nav {
+  font:14px FontinCaps,serif;background:#241013;color:#dcc589;border:1px solid #644044;padding:7px 12px;
+}
+.game-skin .command-trigger {border-color:#35272c;font-size:11px}
+.game-skin .command-trigger>kbd,.game-skin kbd {border-radius:0;border-color:#47343a;background:#130e11;color:#978777}
+.game-skin main#application {padding:0 16px 5px;grid-template-rows:40px minmax(0,1fr) 19px}
+.game-skin .workspace-heading h1 {display:none}
+.game-skin .workbench-toolbar {gap:16px}
+.game-skin .workspace-access {gap:7px}
+.game-skin .workspace-access button,.game-skin .workspace-actions button {background:#0b080a;border-color:#34272c;color:#b4a58c;padding:5px 9px;font-size:10px}
+.game-skin .workspace-access #active-recipe-name {color:#cbb77a;font-family:FontinCaps,serif;font-size:15px}
+.game-skin .workspace {
+  display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(250px,1.35fr) minmax(215px,1fr);
+  gap:12px;height:100%;min-height:0;
+}
+.game-skin #workshop-view {
+  position:relative;isolation:isolate;grid-column:1;grid-row:1;display:grid;
+  grid-template-columns:minmax(0,1fr) clamp(300px,32%,450px);grid-template-rows:minmax(0,1fr) 48px;
+  gap:0 16px;padding:10px 12px 7px;height:100%;min-height:0;
+  border:10px solid transparent;border-image:url('../data/game/Talent_Tree_Frame_Background_Nineslice_spr_0.png') 17 fill / 10px;
+}
+.game-skin #workshop-view:before {
+  content:'';position:absolute;inset:1px;z-index:-1;
+  background:url('../data/game/Craft_Grid_Background_spr_0.png') center / cover no-repeat;
+  image-rendering:pixelated;pointer-events:none;
+}
+.game-skin .cube-panel {
+  position:relative;grid-column:1;grid-row:1;grid-template-rows:35px minmax(0,1fr) 0;
+  border:0;background:transparent;box-shadow:none;overflow:visible;
+}
+.game-skin .cube-panel>.panel-title {position:relative;justify-content:center;border:0;background:none;padding:0}
+.game-skin .cube-panel>.panel-title h2 {font:30px/1 FontinCaps,serif;letter-spacing:2px;color:#d8c786;text-shadow:2px 2px #000}
+.game-skin .status-dot {display:none}
+.game-skin .cube-panel .segmented {position:absolute;right:0;top:1px;background:#09070bd9;border:1px solid #37272c;border-radius:0;opacity:.8}
+.game-skin .segmented button {background:transparent;border-radius:0;font-size:10px;color:#8e7c68}
+.game-skin .segmented button.active {background:#482029;color:#dcc68d}
+.game-skin .cube-stage {background:transparent!important;overflow:hidden;min-height:0;height:auto!important}
+.game-skin .cube-stage:after {display:none}
+.game-skin .grid-cell {background:transparent;border:0}
+.game-skin .grid-cell:hover:not(:disabled) {background:#c7a56818;border:1px solid #d7af6c66}
+.game-skin .cube-scene,.game-skin .cube-aura,.game-skin .cube-npc,.game-skin .stage-caption {display:none!important}
+.game-skin .stage-top {right:8px;top:8px;left:auto;color:#9d8866;font-size:9px}
+.game-skin .cube-hint {display:none}
+.game-skin .cube-toolbar {position:absolute;bottom:0;left:0;right:0;height:24px;padding:0 6px;background:transparent;border:0;gap:12px;pointer-events:none}
+.game-skin .cube-toolbar button {pointer-events:auto}
+.game-skin .cube-toolbar button {padding:2px 7px;background:#090708aa;border:1px solid #39272b;color:#bca986;font-size:10px}
+.game-skin .cube-toolbar #cube-status {display:none}
+.game-skin .grid-item {border-color:transparent;background:none;border-radius:0;padding:3px}
+.game-skin .grid-item.selected,.game-skin .grid-item:hover {border-color:#a08049;background:#c7a35b0b;box-shadow:none}
+.game-skin #craft-dock {grid-column:1;grid-row:2;min-width:0;display:flex;align-items:center}
+.game-skin .craft-actions {
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(155px,210px) minmax(0,1fr);
+  grid-template-rows:42px;width:100%;gap:10px;position:static;padding:0;
+  border:0;background:transparent;border-radius:0;box-shadow:none;
+}
+.game-skin .craft-dock-info {grid-column:1;grid-row:1;align-self:center;min-width:0}
+.game-skin .craft-dock-info strong {font:13px FontinCaps,serif;color:#d2bd82;display:none}
+.game-skin .craft-dock-info small {font-size:10px;color:#8fb174;white-space:normal;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.game-skin .craft-dock-info small.blocked {color:#c7a083}
+.game-skin .craft-actions .transmute {
+  grid-column:2;grid-row:1;width:100%;height:42px;min-width:0;padding:0;
+  font:24px/1 FontinCaps,serif;letter-spacing:0;color:#f1dca2;text-shadow:2px 2px #000;
+  background:transparent;border:7px solid transparent;border-radius:0;
+  border-image:url('../data/game/Hud_Button_spr_0.png') 7 fill / 7px;
+  box-shadow:none;image-rendering:pixelated;
+}
+.game-skin .craft-actions .transmute:hover:not(:disabled) {filter:brightness(1.3);background:transparent}
+.game-skin .craft-actions .transmute:disabled {filter:brightness(.6) saturate(.5);color:#b4a985;background:transparent;opacity:1;box-shadow:none}
+.game-skin #dock-prepare {grid-column:3;grid-row:1;justify-self:start;align-self:center;margin-left:60px;padding:5px 8px;font-size:10px;background:#0c080bd9;white-space:nowrap}
+.game-skin .craft-actions .batch-select {grid-column:3;grid-row:1;justify-self:start;align-self:center;width:52px;min-width:0;height:28px;padding:2px;font:13px Fontin,serif;background:#090709;border:1px solid #422d2e}
+.game-skin .materials-panel,.game-skin .workspace-switch {display:none!important}
+.game-skin .recipe-detail {
+  grid-column:2;grid-row:1 / span 2;min-height:0;padding:0!important;
+  background:#0a080ad9;border:7px solid transparent;border-radius:0;
+  border-image:url('../data/game/Quest_Text_Border_Dark_spr_0.png') 12 fill / 7px;
+}
+.game-skin .detail-header {padding:7px 10px;border-bottom:1px solid #36282b;background:#0b080ac9;gap:8px}
+.game-skin .detail-header h2 {font:19px/1.15 FontinCaps,serif;letter-spacing:0;color:#d5c487}
+.game-skin .detail-header small {color:#998261;font-size:8px}
+.game-skin .detail-header>img {width:28px;height:32px}
+.game-skin .recipe-body {padding:0 10px 10px;scrollbar-gutter:stable}
+.game-skin .detail-description {font:12px/1.45 Fontin,serif;color:#aaa08b;margin:9px 0}
+.game-skin .ingredients {gap:4px}
+.game-skin .ingredient-row {background:#050406aa;border-color:#392a2e;border-radius:0;padding:5px 6px;gap:7px;min-height:30px}
+.game-skin .ingredient-row>span {font-size:12px}
+.game-skin .ingredient-row .need.enough {color:#86ce54}
+.game-skin .ingredient-row .pick-target {font-size:10px;padding:3px 7px;color:#d0ba81}
+.game-skin .ingredient-alternatives>button,.game-skin .recipe-output {border-radius:0;background:#0b080b;border-color:#3d2d30}
+.game-skin .detail-tools {margin:8px 0}
+.game-skin .detail-tools button {font-size:10px;padding:5px 8px}
+.game-skin .detail-tools .ready {font-size:10px}
+.game-skin .recent-crafts {margin-top:12px;padding-top:10px;border-color:#372a2c}
+.game-skin .recent-crafts-heading h3 {font:16px FontinCaps,serif;color:#c5b280}
+.game-skin .recent-crafts>p {font-size:10px;color:#968d7f}
+.game-skin .recent-craft,.game-skin .analysis-card,.game-skin .journal-entry,.game-skin .journal-detail,.game-skin .snapshot-pair>section {
+  background:#100b0e;border-color:#403038;border-radius:0;
+}
+.game-skin .recent-craft-item strong,.game-skin .journal-heading h2,.game-skin .comparison-title h3 {font-family:FontinCaps,serif;color:#dbca97}
+.game-skin .recent-craft-item small,.game-skin .recent-craft-top time {color:#a59684}
+.game-skin .recent-craft-top strong,.game-skin .recent-craft-bottom {color:#c3b17e}
+.game-skin .craft-blocker {border-color:#6b4231;background:#32191166;border-radius:0;padding:8px}
+.game-skin .craft-blocker p,.game-skin .validation-message {font-size:10px;color:#be9b80}
+.game-skin .codex-guide {padding:10px;background:#100b0e;border-color:#433035;border-radius:0;margin-bottom:10px}
+.game-skin .codex-guide-top {color:#cdb878;font-size:9px}
+.game-skin .codex-sequence {gap:3px;margin:8px 0}
+.game-skin .codex-sequence li {padding:5px;background:#080608;border-radius:0;border-color:#39292d;font-size:10px;gap:3px}
+.game-skin .codex-guide p {font-size:10px;margin:7px 0}
+.game-skin .codex-result {padding:5px 8px;margin:7px 0}
+.game-skin .codex-result small,.game-skin .codex-setup-note {font-size:10px;color:#a99a84}
+.game-skin .codex-guide details {font-size:10px;border-color:#3c2b31;margin-top:9px;padding-top:8px}
+.game-skin .workspace>.recipe-panel {
+  display:grid!important;grid-column:1;grid-row:2;
+  grid-template-columns:auto minmax(150px,1fr) minmax(130px,200px) auto;
+  grid-template-rows:44px minmax(0,1fr) 21px;gap:0 10px;
+  height:100%!important;min-height:0!important;padding:5px 12px;
+  border:9px solid transparent;border-image:url('../data/game/Talent_Tree_Frame_Background_Nineslice_spr_0.png') 17 fill / 9px;
+  background:#080607;overflow:hidden;position:static;
+}
+.game-skin .recipe-panel>.panel-title {grid-column:1;grid-row:1;padding:0 4px;justify-content:start;gap:8px}
+.game-skin .recipe-panel>.panel-title h2 {font:20px FontinCaps,serif;color:#cab780;white-space:nowrap}
+.game-skin .counter {color:#a08b6c;background:#1a1015;border-color:#3d2931;border-radius:0;font:10px 'Segoe UI',sans-serif}
+.game-skin .recipe-panel>.search-field {grid-column:2;grid-row:1;margin:5px 0 7px;height:auto;min-width:0;background:#030204;border-color:#463336;padding:0 8px}
+.game-skin .search-field input {font:12px Fontin,serif;color:#c8bba1;min-width:0}
+.game-skin .recipe-filters {grid-column:3;grid-row:1;margin:5px 0 7px;gap:4px}
+.game-skin .recipe-filters select {background:#100b0d;border-color:#453034;font:12px Fontin,serif;padding:4px;min-width:0}
+.game-skin .recipe-filters .icon-button {width:29px;height:auto;font-size:18px}
+.game-skin .recipe-quick-filters {grid-column:4;grid-row:1;padding:5px 0 7px;margin:0;border:0;gap:4px}
+.game-skin .recipe-quick-filters button {color:#9f8b75;white-space:nowrap;padding:4px 8px;border-radius:0}
+.game-skin .recipe-quick-filters button.active {background:#2c1119;border-color:#6c4342;color:#d2be88}
+.game-skin .recipe-list {
+  grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  align-content:start;gap:5px;padding:0 4px 8px;overflow:auto;scrollbar-gutter:stable;min-height:0;
+}
+.game-skin .recipe-group-title {grid-column:1/-1;padding:8px 6px 2px;font:13px FontinCaps,serif;letter-spacing:1px;color:#9a8063}
+.game-skin .recipe-group-title span {font:9px 'Segoe UI',sans-serif;color:#756151}
+.game-skin .game-recipe {
+  position:relative;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+  width:100%;min-width:0;height:107px;min-height:107px;max-height:none;margin:0;padding:8px 10px 9px;gap:6px;
+  background:transparent;border:10px solid transparent;border-radius:0;
+  border-image:url('../data/game/Name_Text_Border_spr_0.png') 10 fill / 10px;
+  box-shadow:none;text-align:center;contain:layout style;
+}
+.game-skin .game-recipe:hover:not(:disabled) {background:transparent;border-color:transparent;filter:brightness(1.35)}
+.game-skin .game-recipe.active {
+  background:transparent;border-color:transparent;
+  border-image-source:url('../data/game/Name_Text_Border_Chosen_spr_0.png');box-shadow:none;
+}
+.game-skin .game-recipe:focus-visible {outline:1px solid #ddba77;outline-offset:-4px}
+.game-skin .game-recipe .game-recipe-name {
+  font:16px/1.12 FontinCaps,serif;font-weight:400;color:#cabb7a;letter-spacing:.35px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:none;display:block;padding:0 4px;
+}
+.game-skin .game-recipe.active .game-recipe-name {color:#f0d59c}
+.game-skin .game-recipe-favorite {position:absolute;right:3px;top:0;color:#e7c382;font-size:10px}
+.game-skin .game-recipe-art {display:flex;align-items:center;justify-content:center;gap:10px;flex:1;min-height:0}
+.game-skin .game-recipe-result {position:relative;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.game-skin .game-recipe-result>img {width:42px;height:47px;object-fit:contain;image-rendering:pixelated}
+.game-skin .game-recipe-result>span {color:#ccbc7c;font:17px FontinCaps,serif}
+.game-skin .game-recipe-cost {display:flex;align-items:center;justify-content:center;gap:12px;min-width:0}
+.game-skin .game-recipe-ingredient {position:relative;display:flex;align-items:center;justify-content:center;width:33px;height:44px;flex-shrink:1}
+.game-skin .game-recipe-ingredient>img {width:32px;height:43px;object-fit:contain;image-rendering:pixelated}
+.game-skin .game-recipe-quantity {position:absolute;bottom:-1px;right:-8px;font:16px/1 Fontin,serif;color:#49ed08;text-shadow:1px 1px #000,-1px -1px #000;white-space:nowrap}
+.game-skin .game-recipe-target {width:35px}
+.game-skin .target-symbol {color:#72604b;font:35px/1 Fontin,serif}
+.game-skin .game-recipe-target .game-recipe-quantity {font:12px FontinCaps,serif;right:-5px;color:#a5bd77}
+.game-skin .game-recipe-ingredient>small {position:absolute;top:0;right:-8px;background:#160c10;color:#bda880;font:8px 'Segoe UI',sans-serif;margin:0}
+.game-skin .many-ingredients .game-recipe-cost {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px 7px}
+.game-skin .many-ingredients .game-recipe-ingredient {width:26px;height:23px}
+.game-skin .many-ingredients .game-recipe-ingredient>img {width:24px;height:24px}
+.game-skin .many-ingredients .game-recipe-quantity {font-size:11px;right:-5px;bottom:-3px}
+.game-skin .game-recipe.unsupported {opacity:.56}
+.game-skin .game-recipe.dimmed {opacity:.3;filter:grayscale(.75)}
+.game-skin .game-recipe.dimmed:hover:not(:disabled),.game-skin .game-recipe.dimmed:focus-visible {opacity:.55;filter:grayscale(.5)}
+.game-skin .game-recipe.craft-ready .game-recipe-name {color:#e4d48b}
+.game-skin .game-recipe.craft-ready:after {content:'●';position:absolute;left:4px;top:1px;color:#87d45a;font-size:9px}
+.game-skin .game-recipe-unavailable {position:absolute;bottom:0;left:0;right:0;color:#bb8b77;font-size:8px;text-align:center}
+.game-skin .sidebar-footer {grid-column:1/-1;grid-row:3;display:flex;padding:3px 6px;font-size:9px;color:#85725e;border-top:1px solid #291d23}
+.game-skin .sidebar-footer .tiny-button {font-size:9px;background:none;border:0;color:#9d8568}
+.game-skin .workspace>.inspector {display:none!important}
+.game-skin .workspace:has(#workshop-view[hidden]) {grid-template-rows:minmax(0,1fr)}
+.game-skin .workspace:has(#workshop-view[hidden])>.recipe-panel {display:none!important}
+.game-skin .secondary-view {grid-column:1;grid-row:1;height:100%;min-height:0!important;border:9px solid transparent;border-image:url('../data/game/Talent_Tree_Frame_Background_Nineslice_spr_0.png') 17 fill / 9px}
+.game-skin #history-view:not([hidden]) {display:flex}
+.game-skin .journal-entry[aria-pressed=true] {background:#2a121c;border-color:#765048;box-shadow:inset 2px 0 #b58b52}
+.game-skin .comparison-table thead {background:#100a0e}
+.game-skin .comparison-table th,.game-skin .comparison-table td {border-color:#382830}
+.game-skin .footer {padding:4px 4px 0;color:#726754;font-size:8px}
+.game-skin .footer button {color:#8f7b61;font-size:8px;background:none;border:0}
+.game-skin dialog {border:10px solid transparent;border-image:url('../data/game/Talent_Tree_Frame_Background_Nineslice_spr_0.png') 17 fill / 10px;background:#0c080b}
+.game-skin dialog::backdrop {background:#000b;backdrop-filter:blur(3px)}
+.game-skin .dialog-heading {background:#120b10;border-color:#3e2b32}
+.game-skin .dialog-heading h2 {font:25px FontinCaps,serif;color:#d8c486;letter-spacing:0}
+.game-skin .dialog-bottom,.game-skin .setup-status {background:#120b10;border-color:#3e2b32}
+.game-skin .catalog-item,.game-skin .setup-section,.game-skin .setup-preview,.game-skin .setup-controls,.game-skin .setup-tabs,.game-skin .socket-browser {
+  background:#100b0f;border-color:#3d2c34;border-radius:0;
+}
+.game-skin .catalog-item:hover {background:#26141c;border-color:#98754b}
+.game-skin .setup-tabs [aria-selected=true] {background:#38151e;border-color:#725044;color:#e1cb91}
+.game-skin .inspector-actions {background:#160d12;border-color:#493039}
+.game-skin .mc-controls {background:#100a0e}
+.game-skin .inspector>.panel-title {background:#160d12;border-color:#3c2930}
+.game-skin .inspector .game-item-card {background:#09070a}
+.game-skin .drawer {width:min(1050px,calc(100vw - 32px));margin:16px auto;height:calc(100dvh - 32px)}
+.game-skin .drawer>.recipe-panel {display:grid!important;grid-template-columns:1fr;grid-template-rows:40px 38px 34px 34px minmax(0,1fr) 25px;padding:0 8px}
+.game-skin .drawer .recipe-panel>.panel-title {grid-column:1;grid-row:1;justify-content:space-between}
+.game-skin .drawer .recipe-panel>.search-field {grid-column:1;grid-row:2;margin:2px}
+.game-skin .drawer .recipe-filters {grid-column:1;grid-row:3;margin:2px}
+.game-skin .drawer .recipe-quick-filters {grid-column:1;grid-row:4;padding:2px}
+.game-skin .drawer .recipe-list {grid-column:1;grid-row:5;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding-top:6px}
+.game-skin .drawer .sidebar-footer {grid-column:1;grid-row:6}
+.game-skin .drawer .drawer-close {display:inline-grid}
+.game-skin ::-webkit-scrollbar {width:7px;height:7px}
+.game-skin ::-webkit-scrollbar-track {background:#070406;border:1px solid #362129}
+.game-skin ::-webkit-scrollbar-thumb {background:#6b343f;border:1px solid #9a6160;border-radius:0}
+@media(min-width:1800px) {
+  .game-skin .workspace {grid-template-rows:minmax(290px,1.35fr) minmax(260px,1fr)}
+  .game-skin .game-recipe {height:124px;min-height:124px;padding:9px 15px}
+  .game-skin .game-recipe .game-recipe-name {font-size:19px}
+  .game-skin .game-recipe-result>img {width:55px;height:58px}
+  .game-skin .game-recipe-ingredient {width:38px;height:52px}
+  .game-skin .game-recipe-ingredient>img {width:36px;height:51px}
+  .game-skin .game-recipe-cost {gap:20px}
+}
+@media(max-width:1100px) {
+  .game-skin .command-trigger>span,.game-skin .command-trigger>kbd {display:none}
+  .game-skin #workshop-view {grid-template-columns:minmax(0,1fr) 330px;gap:0 10px;padding:7px}
+  .game-skin .craft-actions {grid-template-columns:minmax(0,1fr) 160px minmax(0,1fr);gap:7px}
+  .game-skin #dock-prepare {display:none}
+  .game-skin .game-recipe .game-recipe-name {font-size:14px;letter-spacing:0}
+  .game-skin .game-recipe {padding:8px 3px;height:103px;min-height:103px}
+  .game-skin .game-recipe-cost {gap:6px}
+  .game-skin .game-recipe-result>img {width:31px;height:38px}
+  .game-skin .game-recipe-ingredient {width:28px}
+  .game-skin .game-recipe-ingredient>img {width:27px;height:37px}
+  .game-skin .game-recipe-quantity {font-size:13px;right:-5px}
+  .game-skin .many-ingredients .game-recipe-ingredient {width:20px}
+  .game-skin .many-ingredients .game-recipe-ingredient>img {width:20px;height:22px}
+}
+@media(max-width:899px) {
+  .game-skin .topbar {padding:0 10px;gap:10px;flex-wrap:nowrap;min-height:0}
+  .game-skin .brand {font-size:19px;margin:0}.game-skin .brand small {display:none}
+  .game-skin .topbar nav {width:auto;order:0}.game-skin .nav-button {font-size:12px;padding:0 7px}
+  .game-skin .top-actions {margin-left:auto}.game-skin .top-actions #header-catalog,.game-skin .codex-nav {font-size:11px;padding:6px}
+  .game-skin .command-trigger {display:none}.game-skin .workspace-access #inventory-open {display:block}
+  .game-skin main#application {padding:0 8px 3px;grid-template-rows:36px minmax(0,1fr) 17px}
+  .game-skin .workspace {grid-template-rows:minmax(265px,1.15fr) minmax(210px,1fr);gap:8px}
+  .game-skin #workshop-view {grid-template-columns:minmax(0,1fr) 285px;grid-template-rows:minmax(0,1fr) 44px;border-width:7px;border-image-width:7px;padding:5px}
+  .game-skin .recipe-detail {grid-row:1/span 2}
+  .game-skin .cube-panel {grid-template-rows:30px minmax(0,1fr) 24px}
+  .game-skin .cube-toolbar {position:static}
+  .game-skin .cube-panel>.panel-title h2 {font-size:25px}
+  .game-skin .cube-panel .segmented {position:static;margin-left:12px}
+  .game-skin .recipe-list {grid-template-columns:repeat(3,minmax(0,1fr))}
+  .game-skin .workspace>.recipe-panel {grid-template-columns:auto minmax(120px,1fr) 155px;grid-template-rows:40px minmax(0,1fr) 20px;padding:3px 6px}
+  .game-skin .workspace>.recipe-panel>.recipe-quick-filters {display:none}
+  .game-skin .craft-dock-info {display:none!important}.game-skin .craft-actions {grid-template-columns:1fr 150px 1fr;gap:5px}
+  .game-skin .craft-actions .transmute {height:40px;font-size:23px}
+  .game-skin .cube-toolbar #cube-status {display:none}
+  .game-skin .cube-toolbar {justify-content:space-between}
+  .game-skin .detail-header h2 {font-size:17px}
+}
+@media(max-width:650px) {
+  .game-skin .topbar {height:78px!important;flex-basis:78px;display:grid;grid-template-columns:1fr auto;grid-template-rows:40px 32px;gap:0 6px}
+  .game-skin .topbar nav {grid-column:1/-1;grid-row:2;justify-content:center;gap:12px;height:30px}
+  .game-skin .nav-button {font-size:14px;height:29px}
+  .game-skin .top-actions {gap:5px}.game-skin .brand>img {width:18px;height:24px}
+  .game-skin .top-actions #header-catalog,.game-skin .codex-nav {font-size:11px;padding:5px}
+  .game-skin .top-actions .icon-button {width:25px;height:27px;font-size:13px}
+  .game-skin .workspace-actions #reset {display:none}.game-skin .workspace-access #active-recipe-name {display:none}
+  .game-skin .workspace {grid-template-rows:minmax(255px,1.1fr) minmax(185px,1fr);gap:6px}
+  .game-skin #workshop-view {grid-template-columns:minmax(0,1fr);grid-template-rows:25px minmax(0,1fr) 40px;gap:0}
+  .game-skin .workspace-switch {display:flex!important;grid-column:1;grid-row:1;align-items:center;justify-content:center;gap:10px;background:none}
+  .game-skin .workspace-switch button {font:13px FontinCaps,serif;border:0;border-radius:0;background:none;padding:2px 14px;color:#968267}
+  .game-skin .workspace-switch button[aria-selected=true] {color:#e4cc8f;background:#37131c}
+  .game-skin .cube-panel {grid-column:1;grid-row:2;grid-template-rows:25px minmax(0,1fr) 22px}
+  .game-skin .recipe-detail {grid-column:1;grid-row:2;display:none}
+  .game-skin #workshop-view[data-pane=recipe]>.recipe-detail {display:flex}
+  .game-skin #workshop-view[data-pane=recipe]>.cube-panel {display:none}
+  .game-skin #craft-dock {grid-column:1;grid-row:3;display:flex}
+  .game-skin .cube-panel>.panel-title h2 {font-size:21px}
+  .game-skin .workspace>.recipe-panel {grid-template-columns:auto minmax(80px,1fr) 108px;grid-template-rows:36px minmax(0,1fr) 19px;gap:0 6px;border-width:6px;border-image-width:6px;padding:2px}
+  .game-skin .recipe-panel>.panel-title h2 {font-size:16px}.game-skin .recipe-panel>.panel-title .counter {display:none}
+  .game-skin .recipe-panel .search-field {gap:3px;padding:0 4px}.game-skin .recipe-panel .search-field>span,.game-skin .recipe-panel .search-field>kbd {display:none}
+  .game-skin .recipe-filters select {font-size:10px}.game-skin .recipe-filters .icon-button {width:24px}
+  .game-skin .recipe-list,.game-skin .drawer .recipe-list {grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}
+  .game-skin .game-recipe {height:104px;min-height:104px;padding:6px 2px}
+  .game-skin .game-recipe .game-recipe-name {font-size:13px;white-space:normal;line-height:1.05;max-height:27px}
+  .game-skin .game-recipe-art {gap:5px}.game-skin .game-recipe-cost {gap:5px}
+  .game-skin .game-recipe-ingredient {width:23px}.game-skin .game-recipe-ingredient>img {width:23px;height:33px}
+  .game-skin .game-recipe-result>img {width:27px;height:32px}
+  .game-skin .game-recipe-target {display:none}.game-skin .many-ingredients .game-recipe-cost {gap:2px}
+  .game-skin .many-ingredients .game-recipe-ingredient {width:19px}.game-skin .many-ingredients .game-recipe-ingredient>img {width:18px}
+  .game-skin .game-recipe-quantity {font-size:12px}.game-skin .game-recipe-result>span {font-size:13px}
+  .game-skin .footer>span {display:none}.game-skin .footer {justify-content:center}
+}
+@media(max-height:650px) and (min-width:651px) {
+  .game-skin .topbar {height:45px!important;flex-basis:45px}
+  .game-skin main#application {grid-template-rows:32px minmax(0,1fr) 16px}
+  .game-skin .workspace {grid-template-rows:minmax(200px,1fr) minmax(160px,.9fr);gap:6px}
+  .game-skin #workshop-view {border-width:7px;border-image-width:7px;padding:4px;grid-template-rows:minmax(0,1fr) 36px}
+  .game-skin .cube-panel {grid-template-rows:26px minmax(0,1fr) 20px}
+  .game-skin .cube-panel>.panel-title h2 {font-size:23px}
+  .game-skin .craft-actions,.game-skin .craft-actions .transmute {height:34px;grid-template-rows:34px}
+  .game-skin .workspace>.recipe-panel {grid-template-rows:34px minmax(0,1fr) 18px}
+  .game-skin .game-recipe {height:94px;min-height:94px;padding:5px 7px}
+}
+@media(max-height:650px) and (max-width:650px) {
+  .game-skin .workspace {grid-template-rows:minmax(190px,1fr) minmax(160px,.8fr)}
+  .game-skin .cube-panel {grid-template-rows:22px minmax(0,1fr) 20px}
+}
+/* Enhanced sockets share a visible gold marker in hover and setup. */
+.hover-sockets .enhanced-socket,.setup-sockets .enhanced-socket{border-color:#e4b663;box-shadow:0 0 0 1px #a07935,0 0 10px #bc89263d}

@@ -1,5 +1,11 @@
 # HS Craft Sim — data assets
 
+**Local data only:** The files described below are no longer tracked in the
+maintained public source tree. They remain available in an existing development
+workspace. For a fresh checkout, see [LOCAL-DATA.md](../LOCAL-DATA.md). The table
+below describes historical provenance; current local file fingerprints are in
+`config/local-data-manifest.json`. This documentation grants no distribution rights.
+
 All files are generated from the game binary / shipped CSVs (AnkerGames Season 10 build,
 `Hero_Siege.exe` SHA-256 `2034fad4…`) or copied from the verified Item Editor data set.
 Regenerate with the scripts in `../tools/` (see `../RESEARCH.md`).
@@ -17,7 +23,7 @@ Regenerate with the scripts in `../tools/` (see `../RESEARCH.md`).
 | `translations/<file>.json` | every shipped `translations*.csv` (11 languages), `craft_en.json` = the 245 `craft_*` keys | `tools/extract_translations.py` |
 
 Item-instance keys used by the mechanics (save JSON `data`): `a` seed, `b` base id, `c` unique flag,
-`j` weapon subtype, `i` extra seed, `s` socket seed, `w` bricked/corrupted, `q` satanic-crystal slam,
+`j` weapon subtype, `i` extra seed, `s` socket seed, `r` corruption (`w` is not a corruption flag), `q` satanic-crystal slam,
 `v`/`t` codex modifier flags, `l` augment level, `o` origin/amount flag, `g` equipped group, `h` generated flag.
 Derived info keys (`item.GetItemInfo(n)`) are documented in `../research/iteminfo_keys.md`
 (27 rarity, 32 tier, 34 weapon type, 21 two-handed, 31 max stack, 9 value).

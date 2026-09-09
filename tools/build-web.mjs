@@ -10,7 +10,14 @@ const read=relative=>readFile(path.join(root,relative));
 const json=async relative=>JSON.parse(await read(relative));
 const sources={recipes:'recipes.json',catalog:'items_catalog.json',statNames:'stat_names.json',pools:'stat_pools.json',attributes:'translations/attributes.json',profiles:'item_profiles.json',texts:'current_item_text.json'};
 const runtime={};let sourceBytes=0;
-for(const [key,name] of Object.entries(sources)){const bytes=await read(`data/${name}`);sourceBytes+=bytes.length;runtime[key]=JSON.parse(bytes);}
+for(const [key,name] of Object.entries(sources)){
+  let bytes;
+  try{bytes=await read(`data/${name}`);}catch(error){
+    if(error.code==='ENOENT')throw new Error(`Local data is required: data/${name}. See LOCAL-DATA.md before building a source checkout.`,{cause:error});
+    throw error;
+  }
+  sourceBytes+=bytes.length;runtime[key]=JSON.parse(bytes);
+}
 // Import diagnostics are local provenance, not part of the simulation model.
 delete runtime.profiles.editorSource;
 delete runtime.profiles.coverage;

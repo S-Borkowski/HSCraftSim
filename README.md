@@ -1,12 +1,12 @@
-> **Player test release 1.0.2:** The Windows EXE packages the current Cube workspace, separate Add ingredients / Craft actions, saved result comparisons and explicit star-roll outcomes. See [player testing](PLAYER-TESTING.md), [desktop instructions](DESKTOP.md) and [current native evidence and remaining limitations](research/current/VERIFIED_RULES.md).
+> **Source distribution update:** Fresh source checkouts require a compatible, authorized local data set. Game-derived assets and captured data are no longer included in the maintained source tree. See [local setup](LOCAL-DATA.md), [distribution scope and existing-release limitations](DISTRIBUTION.md), and [research scripts](docs/RESEARCH-SCRIPTS.md). Existing Windows EXE/ZIP assets are preserved; this change does not establish redistribution rights for their embedded content.
 
 # HSCraftSim — Cube Workshop
 
-A Hero Siege Cube crafting simulator with original game assets and an English interface. Version 1.0.2. Runs locally or as a static website.
+A Hero Siege Cube crafting simulator with an English interface. Version 1.0.2. Runs locally or as a static website when its compatible local data has been supplied.
 
 ## Start
 
-Double-click **Start.bat**. Existing Baslat.bat and run.bat launchers also work. Python 3 is required; no npm packages or game installation are needed to run the included build.
+Prepare [local data](LOCAL-DATA.md), then double-click **Start.bat**. Existing Baslat.bat and run.bat launchers also work. Python 3 is required; no npm packages are needed. The source archive does not contain a ready-to-run game data bundle.
 
 The app opens at `http://127.0.0.1:17870/ui/`. The server listens only on loopback and uses the next available port when needed. Terminal alternative: `python server.py`.
 
@@ -52,7 +52,7 @@ The Orb recipe selects one of 18 Orb types and produces **8 copies of that type*
 
 This is not a fully verified emulation of the current game build.
 
-- 1,609 item images, original Cube grids, backgrounds, animations, tooltip frames and Fontin fonts are included.
+- The local data set used during development contains item images, Cube grids, backgrounds, animations, tooltip frames and fonts. These files are excluded from the maintained public source tree; see [distribution scope](DISTRIBUTION.md).
 - 2,097 catalog records: 1,932 named selectable items and 65 hidden unnamed records. All concrete references in 301 recipes resolve to catalog items. There are 100 Runeword definitions, including seven Codex words.
 - Item Editor supplies 1,444 stat profiles, 392 stat descriptions, 817 skill names, 22 special roll models and 267 measured socket chains. Current native base values and draw order supersede the imported model for 610 static Unique definitions, including 161 with changed values. Socket and special tails remain separate.
 - Weapon subtype participates in item identity. Rolled jewels with different definitions are not combined into one stack.

@@ -34,6 +34,19 @@ Thumbs.db
 !/research/current/
 /research/current/*
 !/research/current/*.md
-!/research/current/*.json
-!/research/current/*.jsonl
 !/research/current/*.py
+
+# Locally supplied game data and captured fixtures. See LOCAL-DATA.md.
+/data/*
+!/data/README.md
+/tests/*.json
+/tests/*.jsonl
+/research-scripts-output/
+
+# Research helpers may be shared; their decompiled/captured output may not.
+!/research/DecompileItemState.java
+!/research/RecoverCompletionSwitches.java
+!/research/legacy_helpers/
+/research/legacy_helpers/*
+!/research/legacy_helpers/*.py
+!/research/legacy_helpers/*.java

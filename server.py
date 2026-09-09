@@ -27,6 +27,11 @@ def main():
     parser.add_argument('--no-browser',action='store_true')
     parser.add_argument('--port',type=int,default=17870)
     args=parser.parse_args()
+    from tools.local_data import inspect
+    data_status=inspect(ROOT)
+    if data_status['missing']:
+        raise RuntimeError('Local simulator data is required for this source checkout. '
+                           'See LOCAL-DATA.md and run python tools/local_data.py import --from <authorized-local-workspace>.')
     for port in range(args.port,args.port+10):
         url=f'http://127.0.0.1:{port}'
         try:

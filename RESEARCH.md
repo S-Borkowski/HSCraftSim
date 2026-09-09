@@ -1,3 +1,5 @@
+> **Source distribution:** This is a historical research notebook. Referenced raw exports, captured maps/data, game assets and native fixtures are local inputs/outputs, not part of the maintained public source tree. Available tools are described in [the scripts guide](docs/RESEARCH-SCRIPTS.md); see [distribution scope](DISTRIBUTION.md). Old incomplete or contradictory findings are superseded by later verification notes.
+
 > **Current native update:** Star/corruption arithmetic, Crystal stat pools and 144 socketable definitions are now extracted from the supplied clean `c6ecc069…` binary. See [verified rules and limitations](research/current/VERIFIED_RULES.md).
 
 > **2026-09-07 correction:** `w` is not a corruption flag; `r` is. The star-upgrade success branch increments `p`. See [ITEM_STATE_CORRECTIONS.md](research/ITEM_STATE_CORRECTIONS.md). Older contradictory statements below are superseded.

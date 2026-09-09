@@ -10,3 +10,10 @@
 *.bat text eol=crlf
 *.png binary
 *.ttf binary
+
+# Supplemental protection for future automatic Source code archives.
+/build export-ignore
+/dist export-ignore
+/release export-ignore
+/tests/_output export-ignore
+/research-scripts-output export-ignore

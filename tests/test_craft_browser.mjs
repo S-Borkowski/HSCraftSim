@@ -33,7 +33,7 @@ const stack=(item,id='qa-target',amount=1,x=0,y=0)=>({id,item,amount,x,y});
 const state=(r,stacks=[])=>({stacks,stash:[],history:[],columns:9,rows:6,recipe:r.index,rng:42,seedStart:42,repeatable:true,jewelLevel:3750,sound:false,favorites:[],crafts:0,spent:0,results:0});
 function idle(){assert.equal(evaluate(`(async()=>{for(let n=0;n<100;n++){if(document.querySelector('#application')?.getAttribute('aria-busy')==='false'&&document.querySelector('#transmute')){await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return true;}await new Promise(r=>setTimeout(r,25));}return false;})()`),true,'Workshop did not become idle');}
 function load(s,packed=false){
-  const payload={schema:2,state:packed?s:{...s,stacks:s.stacks.map(s=>({...s,item:packItem(s.item)}))}};
+  const payload={schema:2,state:packed?s:{...s,stacks:s.stacks.map(s=>({...s,versions:s.versions||[],item:packItem(s.item)}))}};
   evaluate(`localStorage.setItem('${STORAGE}',${JSON.stringify(JSON.stringify(payload))}); true`);
   browser('open',base+'?qa='+Date.now());idle();
 }
@@ -42,6 +42,37 @@ function check(name,fn){fn();reports.push({name,ok:true});console.log('PASS '+na
 try {
   browser('open',base);idle();browser('set','viewport','1366','768');
   browser('screenshot',path.join(dir,'startup.png'));
+  check('Recipe double-click fills the Cube without crafting; repeated preparation is a no-op',()=>{
+    const r=recipe('blessed_dice');load(state(r,[stack(armor())]));
+    browser('fill','#recipe-search','Blessed Dice');
+    const before=saved();
+    browser('dblclick',`.game-recipe[data-recipe="${r.index}"]`);idle();
+    const after=saved();assert.equal(after.stacks.length,2);
+    assert.deepEqual(after.stacks[0].item,before.stacks[0].item);
+    for(const key of ['history','rng','crafts','spent','results'])assert.deepEqual(after[key],before[key]);
+    assert.equal(evaluate(`document.querySelector('#transmute').disabled`),false);
+    browser('dblclick',`.game-recipe[data-recipe="${r.index}"]`);idle();
+    assert.deepEqual(saved(),after);
+    assert.equal(evaluate(`document.querySelector('#last-craft .hover-heading h3').textContent`),row.name);
+    browser('press','Control+z');idle();assert.equal(saved().stacks.length,1);
+    browser('click','#recipes-open');browser('fill','#recipe-search','Blessed Dice');
+    browser('dblclick',`#recipes-dialog .game-recipe[data-recipe="${r.index}"]`);idle();
+    assert.equal(evaluate(`document.querySelector('#recipes-dialog').open`),false);
+    assert.equal(saved().stacks.length,2);assert.equal(saved().history.length,0);
+    browser('press','Control+z');idle();
+    browser('click',`.game-recipe[data-recipe="${r.index}"]`);
+    browser('press','Shift+Enter');idle();assert.equal(saved().stacks.length,2);assert.equal(saved().crafts,0);
+  });
+  check('Double-click never supplies missing equipment or bypasses a full Cube',()=>{
+    const r=recipe('blessed_dice');load(state(r));browser('fill','#recipe-search','Blessed Dice');
+    const empty=saved();browser('dblclick',`.game-recipe[data-recipe="${r.index}"]`);idle();
+    assert.deepEqual(saved(),empty,'A recipe cannot invent a target');
+    const full=[stack(armor())];
+    while(true){const item=sim.makeItem(15,0),p=findPosition(full,item,4,4);if(!p)break;full.push(stack(item,`full-${full.length}`,1,p.x,p.y));}
+    load({...state(r,full),columns:4,rows:4});browser('fill','#recipe-search','Blessed Dice');
+    const before=saved();browser('dblclick',`.game-recipe[data-recipe="${r.index}"]`);idle();
+    assert.deepEqual(saved(),before);
+  });
   load(state(recipe('blessed_dice'),[stack(armor())]));
   check('Preparation visibly adds materials without crafting, even on a rapid second click',()=>{
     const before=saved();assert.equal(evaluate(`document.querySelector('#transmute').disabled`),true);
@@ -64,6 +95,21 @@ try {
     evaluate(`(()=>{const b=document.querySelector('#transmute');b.click();document.querySelector('#transmute').click();return document.querySelector('#transmute').disabled;})()`);
     idle();assert.equal(saved().crafts,1);assert.equal(saved().history.length,1);
   });
+  check('Selecting a Cube item updates its live sheet; Inspect remains a separate editor',()=>{
+    const before=saved();
+    browser('click','#dock-prepare');idle();
+    const material=saved().stacks.find(s=>s.id!=='qa-target');
+    evaluate(`document.querySelector('.item-preview-body').scrollTop=200;true`);
+    browser('click',`[data-stack="${material.id}"]`);
+    assert.equal(evaluate(`document.querySelector('#last-craft .hover-heading h3').textContent`),'Blessed Dice');
+    assert.equal(evaluate(`document.querySelector('.item-preview-body').scrollTop`),0);
+    assert.equal(evaluate(`document.querySelector('#inspector-dialog').open`),false);
+    browser('click','[data-stack="qa-target"]');
+    assert.equal(evaluate(`document.querySelector('#last-craft .hover-heading h3').textContent`),row.name);
+    browser('press','e');assert.equal(evaluate(`document.querySelector('#inspector-dialog').open`),true);
+    browser('press','Escape');browser('press','Control+z');idle();
+    assert.deepEqual(saved(),before);
+  });
   check('Ten preparation and craft pairs create ten histories with saved differences',()=>{
     for(let n=2;n<=10;n++){
       assert.equal(evaluate(`document.querySelector('#transmute').disabled`),true);
@@ -73,8 +119,13 @@ try {
     assert.equal(saved().history.length,10);assert.equal(saved().stacks[0].versions.length,10);
     assert.equal(saved().stacks.length,1);
     assert.equal(evaluate(`document.querySelector('.last-craft-link').dataset.lastComparison`),'10');
-    assert.ok(evaluate(`document.querySelectorAll('[data-craft-change]').length`)>0);
-    assert.ok(evaluate(`document.querySelectorAll('[data-craft-change]').length`)<=5);
+    const latest=saved().history[0].afterSnapshot;
+    const primary=latest.stats.find(s=>s.key===154);
+    assert.equal(evaluate(`document.querySelector('#last-craft [data-stat-key="154"] b').textContent`),String(Number((primary.displayValue??primary.value).toFixed(2))));
+    assert.ok(evaluate(`document.querySelectorAll('#last-craft .hover-roll-range').length`)>0);
+    browser('click','#last-craft .last-craft-recent>summary');
+    assert.equal(evaluate(`document.querySelectorAll('#last-craft .recent-craft').length`),10);
+    browser('click','#last-craft .last-craft-recent>summary');
   });
   const ten=saved();
   check('Undo restores the material before craft; reloading preserves the result and versions',()=>{
@@ -91,7 +142,7 @@ try {
     assert.equal(evaluate(`document.querySelector('#history-view').dataset.entry`),'10');
     browser('click','[data-view="workshop"]');
   });
-  for(const [w,h] of [[1920,1080],[1366,768],[1280,720],[1024,768],[390,844]])for(const grid of [4,9]) {
+  for(const [w,h] of [[1920,1080],[1366,768],[1280,720],[1024,768],[768,1024],[390,844]])for(const grid of [4,9]) {
     browser('set','viewport',String(w),String(h));browser('click',`[data-grid="${grid}"]`);idle();
     check(`${w}x${h}, ${grid===4?'4x4':'9x6'}: viewport, controls and visible result`,()=>{
       const metrics=evaluate(`(()=>{const rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};return {viewport:[innerWidth,innerHeight],page:[document.documentElement.scrollWidth,document.documentElement.scrollHeight],button:rect(document.querySelector('#transmute')),result:rect(document.querySelector('.last-craft-summary')),cube:rect(document.querySelector('#cube-grid')),stage:rect(document.querySelector('.cube-stage')),broken:[...document.images].filter(e=>e.offsetWidth&&e.complete&&!e.naturalWidth).map(e=>e.src)};})()`);
@@ -99,6 +150,7 @@ try {
       const prepare=evaluate(`(()=>{const r=document.querySelector('#dock-prepare').getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom,width:r.width,height:r.height};})()`);
       for(const box of [metrics.button,metrics.result,prepare]){assert.ok(box.width>0&&box.height>0);assert.ok(box.x>=0&&box.right<=w+1&&box.y>=0&&box.bottom<=h+1,JSON.stringify(metrics));}
       assert.ok(prepare.right<=metrics.button.x,'Prepare and Craft must remain separate buttons');
+      if(w>=650)assert.ok(Math.abs(prepare.x-metrics.stage.x)<20&&prepare.y>=metrics.stage.bottom,'Craft actions belong directly below the Cube');
       assert.ok(metrics.cube.x>=metrics.stage.x-1&&metrics.cube.right<=metrics.stage.right+1,JSON.stringify(metrics));
       assert.ok(metrics.cube.y>=metrics.stage.y-1&&metrics.cube.bottom<=metrics.stage.bottom+1,JSON.stringify(metrics));
       assert.deepEqual(metrics.broken,[]);
@@ -110,6 +162,12 @@ try {
     browser('click','button[data-pane="recipe"]');idle();
     assert.ok(evaluate(`document.querySelector('#transmute').getBoundingClientRect().bottom<innerHeight`));
     assert.ok(evaluate(`document.querySelector('.last-craft-summary').getBoundingClientRect().height>0`));
+    browser('click','.workspace-switch button[data-pane="item"]');idle();
+    browser('press','ArrowLeft');assert.equal(evaluate(`document.querySelector('#workshop-view').dataset.pane`),'recipe');
+    browser('press','End');assert.equal(evaluate(`document.querySelector('#workshop-view').dataset.pane`),'item');
+    assert.ok(evaluate(`document.querySelector('.item-preview-body').getBoundingClientRect().height>100`));
+    assert.ok(evaluate(`document.querySelector('#transmute').getBoundingClientRect().bottom<innerHeight`));
+    browser('screenshot',path.join(dir,'mobile-item.png'));
     browser('click','button[data-pane="cube"]');idle();
     browser('hover','[data-stack="qa-target"]');
     const tooltip=evaluate(`(()=>{const e=document.querySelector('#tooltip'),r=e.getBoundingClientRect();return {visible:!e.hidden,x:r.x,y:r.y,right:r.right,bottom:r.bottom};})()`);
@@ -129,11 +187,11 @@ try {
     const alt=r.ingredients[2].alternatives[1];
     evaluate(`document.querySelector('[data-ingredient-choice="2"][data-choice="${alt.catalogId}"]').scrollIntoView({block:'center'});true`);
     browser('click',`[data-ingredient-choice="2"][data-choice="${alt.catalogId}"]`);
-    browser('click','#dock-prepare');idle();
-    assert.equal(saved().crafts,0);assert.ok(saved().stacks.some(s=>s.item.rowId===alt.catalogId));
+    browser('dblclick',`.game-recipe[data-recipe="${r.index}"]`);idle();
+    assert.equal(saved().crafts,0);assert.ok(saved().stacks.some(s=>s.item.rowId===alt.catalogId),'Double-click must respect the selected alternative gem');
     browser('click','#transmute');idle();
     assert.ok(saved().history[0].cost.some(c=>c.name===alt.name));
-    assert.ok(evaluate(`!!document.querySelector('[data-craft-change="sockets"]')`));
+    assert.match(evaluate(`document.querySelector('#last-craft .hover-sockets').textContent`),new RegExp(`0 / ${saved().history[0].afterSnapshot.sockets.count} Sockets filled`));
     assert.equal(evaluate(`document.querySelector('#transmute').disabled`),true);
     assert.equal(evaluate(`document.activeElement===document.querySelector('.last-craft-link')`),true,'Focus should move to the saved result when a repeat is blocked');
   });
@@ -168,9 +226,12 @@ try {
       assert.equal(evaluate(`document.querySelector('.last-craft-outcome').dataset.outcome`),outcome);
       if(stars===0) {
         assert.match(evaluate(`document.querySelector('#last-craft').textContent`),/Star loss roll · Already at 0/);
-        assert.match(evaluate(`document.querySelector('#last-craft').textContent`),/material was consumed/);
+        assert.match(evaluate(`document.querySelector('.last-craft-outcome').title`),/material was consumed/);
       }
-      if(outcome==='corrupted')assert.equal(evaluate(`document.querySelector('#dock-prepare').disabled`),true);
+      if(outcome==='corrupted'){
+        assert.equal(evaluate(`document.querySelector('#dock-prepare').disabled`),true);
+        assert.ok(evaluate(`document.querySelectorAll('#last-craft .hover-corruption .hover-source').length`)>0);
+      }
       browser('screenshot',path.join(dir,`gypsy-${outcome}-${stars}.png`));
       browser('click','.last-craft-link');
       assert.ok(evaluate(`document.querySelector('.comparison-outcome').textContent`).includes('Craft #1:'));
@@ -182,7 +243,7 @@ try {
   check('Recipe browsing keeps the latest result; reset and undo restore it correctly',()=>{
     load(ten,true);browser('fill','#recipe-search','Add Sockets');browser('click','[data-recipe="49"]');idle();
     assert.equal(evaluate(`document.querySelector('.last-craft-link').dataset.lastComparison`),'10');
-    browser('click','#reset');idle();assert.match(evaluate(`document.querySelector('#last-craft').textContent`),/Ready for your first craft/);
+    browser('click','#reset');idle();assert.match(evaluate(`document.querySelector('#last-craft').textContent`),/Add an item to see its properties/);
     browser('press','Control+z');idle();assert.equal(evaluate(`document.querySelector('.last-craft-link').dataset.lastComparison`),'10');
     browser('press','Tab');assert.equal(evaluate(`document.activeElement===document.body`),false);
   });

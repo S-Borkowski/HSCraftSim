@@ -5,7 +5,7 @@ import { ingredientAccepts } from '../engine/recipes.js';
 import { validateCraft, validateTarget, validateTargetStack, outcomeProbabilities, EXPERIMENTAL, UNSUPPORTED } from '../engine/validation.js';
 import { findPosition, canPlace, canStackItems, packItem, unpackItem } from '../engine/session.js';
 import { prepareIngredients, craftReadiness, runCraftAction } from '../engine/craft_action.js';
-import { lastCraftHtml } from './last-craft.js';
+import { itemPreviewHtml, previewStack } from './item-preview.js';
 import { craftOutcome } from './craft-outcome.js';
 import { itemTooltipHtml, itemDescription, itemTypeName, playerStatName, playerStatValue, cleanGameText, WEAPON_TYPES } from './item-tooltip.js';
 import { freshSeed, sessionStartSeed } from '../engine/session_random.js';
@@ -52,8 +52,9 @@ function restoreDrawer(id){const entry=drawerHomes[id];if(entry){const [panel,ho
 function closeDialog(id){$(`#${id}`).close();restoreDrawer(id);}
 for(const id of Object.keys(drawerHomes))$(`#${id}`).addEventListener('close',()=>restoreDrawer(id));
 function closeDrawers(){for(const id of Object.keys(drawerHomes))if($(`#${id}`).open)closeDialog(id);}
-function selectRecipe(index){if(busy)return;cancelAnalysis();state.recipe=index;mcResult=null;closeDrawers();showView('workshop');if(innerWidth<650)setWorkshopPane('recipe');render();save();}
-function setWorkshopPane(pane){$('#workshop-view').dataset.pane=pane;$$('[data-pane]').filter(b=>b.matches('button')).forEach(b=>b.setAttribute('aria-selected',b.dataset.pane===pane));requestAnimationFrame(fitCube);}
+function selectRecipe(index,{keepBrowser=false}={}){if(busy)return;cancelAnalysis();state.recipe=index;mcResult=null;if(!keepBrowser)closeDrawers();showView('workshop');if(innerWidth<650)setWorkshopPane('recipe');render();save();}
+function prepareRecipe(index){if(busy)return;selectRecipe(index);prepare();if(innerWidth<650)setWorkshopPane('cube');}
+function setWorkshopPane(pane){$('#workshop-view').dataset.pane=pane;$$('[role="tab"][data-pane]').forEach(b=>b.setAttribute('aria-selected',b.dataset.pane===pane));requestAnimationFrame(fitCube);}
 function fitCube(){const stage=$('.cube-stage');if(!stage.clientWidth||!stage.clientHeight)return;const large=state.columns===9;const scale=Math.max(.1,Math.min(1.65,(stage.clientWidth-26)/(large?381.6:237),(stage.clientHeight-(getComputedStyle($('#cube-hint')).display==='none'?4:60))/(large?266.4:237)));$('#cube-grid').style.setProperty('--grid-scale',scale.toFixed(4));}
 new ResizeObserver(fitCube).observe($('.cube-stage'));
 function cancelAnalysis(){analysisId++;analysisWorker?.terminate();analysisWorker=null;analysisPending=false;}
@@ -122,7 +123,7 @@ function add(item,amount=1,destination=state.stacks){
   const s={id:uid(),item,amount,...pos};destination.push(s);return s;
 }
 function addCatalog(row,options={}){if(busy)return;try{checkpoint();const s=add(buildItem(row,options),options.amount||1);inspect=s.item;selectedStack=s.id;previousItem=null;mcResult=null;render();save();toast(`${row.name} added to the Cube.`);}catch(e){undoStack.pop();toast(e.message,true);}}
-function inspectItem(item,id=null){inspect=item;selectedStack=id;previousItem=null;renderInspector();renderCube();if(!$('#inspector-dialog').open){if($('#inventory-dialog').open)closeDialog('inventory-dialog');openDrawer('inspector-dialog');}}
+function inspectItem(item,id=null){inspect=item;selectedStack=id;previousItem=null;renderInspector();renderCube();renderLastCraft();if(!$('#inspector-dialog').open){if($('#inventory-dialog').open)closeDialog('inventory-dialog');openDrawer('inspector-dialog');}}
 function moveInspected(remove=false){
   if(busy||!inspect)return;
   const inCube=state.stacks.find(s=>s.item===inspect),inStash=state.stash.find(s=>s.item===inspect),s=inCube||inStash;
@@ -191,7 +192,7 @@ function renderDetail(){
   const blocked=!v.ok&&!v.missing,nextRecipe=v.nextMechanic?sim.recipes.find(candidate=>candidate.mechanic===v.nextMechanic&&validateTarget(candidate,v.target).ok):null;
   const status=v.ok?'● Ready to craft':v.unsupported?'Data unavailable':v.targetInvalid?'Item not eligible':v.missing?'Ingredients needed':'Requirements not met';
   const probs=outcomeProbabilities(r,target);
-  $('#recipe-detail').innerHTML=`<div class="detail-header">${imageFor(recipeSprite(r))}<div><small>${groupNames[category(r)]}</small><h2>${esc(r.name)}</h2></div><button class="favorite-toggle" id="favorite-toggle" aria-label="${state.favorites.includes(r.index)?'Remove from favorites':'Add to favorites'}">${state.favorites.includes(r.index)?'★':'☆'}</button></div>
+  $('#recipe-detail').innerHTML=`<div class="active-recipe-heading">Active Recipe <span>${groupNames[category(r)]}</span></div><div class="detail-header">${imageFor(recipeSprite(r))}<div><h2>${esc(r.name)}</h2></div><button class="favorite-toggle" id="favorite-toggle" aria-label="${state.favorites.includes(r.index)?'Remove from favorites':'Add to favorites'}">${state.favorites.includes(r.index)?'★':'☆'}</button></div>
     <div class="recipe-body"><p class="detail-description">${esc(r.mechanic==='blessed_dice'?"Reroll an SS-tier item's stats without corrupting it. Natural socket counts can also change, affecting the bonuses from socketed stones.":texts[r.descriptionKey]||r.description||'Combine the ingredients in the Cube.')}</p>
     ${blocked?`<div class="craft-blocker" role="status"><strong>Cannot transmute</strong><p id="craft-block-reason">${esc(v.reason)}</p>${nextRecipe?`<button data-recipe="${nextRecipe.index}">Use ${esc(nextRecipe.name)} ↗</button><small>Empty Sockets removes gems and runes; it keeps the socket slots.</small>`:''}</div>`:''}
     <div class="ingredients">${r.ingredients.map(ingredientRow).join('')}</div>
@@ -207,14 +208,17 @@ function renderDetail(){
   $('#craft-dock').replaceChildren($('#recipe-detail .craft-actions'));
 }
 function craftOptions(){return {columns:state.columns,rows:state.rows,choices:ingredientChoices,config:{...sim.config,jewelLevel:state.jewelLevel}};}
-let lastCraftKey=null;
+let lastCraftKey=null,lastPreviewKey=null,lastPreviewId=null;
 function renderLastCraft(){
-  const key=state.history;
-  if(key===lastCraftKey)return;
+  const stack=previewStack(state.stacks,selectedStack),key=state.history;
+  const itemKey=stack?JSON.stringify([stack.id,stack.amount,packItem(stack.item)]):'';
+  if(key===lastCraftKey&&itemKey===lastPreviewKey)return;
   const open=$('.last-craft-recent')?.open||false;
-  $('#last-craft').innerHTML=lastCraftHtml(state.history,{labels});
+  const scroll=stack?.id===lastPreviewId?$('.item-preview-body')?.scrollTop||0:0;
+  $('#last-craft').innerHTML=itemPreviewHtml(sim,stack,state.history,{texts,labels});
   if(open&&$('.last-craft-recent'))$('.last-craft-recent').open=true;
-  lastCraftKey=key;
+  $('.item-preview-body').scrollTop=scroll;
+  lastCraftKey=key;lastPreviewKey=itemKey;lastPreviewId=stack?.id||null;
 }
 function renderInspector(){
   const it=inspect;
@@ -373,7 +377,23 @@ async function craft(count=1){
 function exportSession(){const blob=new Blob([JSON.stringify({schema:2,state:snapshot()},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`HSCraftSim-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 
 // Lock input while a craft is pending, including shortcuts and queued synthetic events.
-for(const type of ['click','input','change','keydown','drop','contextmenu'])document.addEventListener(type,e=>{if(busy){e.preventDefault();e.stopImmediatePropagation();}},true);
+for(const type of ['click','dblclick','input','change','keydown','drop','contextmenu'])document.addEventListener(type,e=>{if(busy){e.preventDefault();e.stopImmediatePropagation();}},true);
+
+document.addEventListener('dblclick',e=>{
+  const tile=e.target.closest('.game-recipe[data-recipe]');
+  if(!tile||!sim||busy)return;
+  e.preventDefault();prepareRecipe(Number(tile.dataset.recipe));
+});
+document.addEventListener('keydown',e=>{
+  const tab=e.target.closest('.workspace-switch [role="tab"]');
+  if(tab&&['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){
+    const tabs=$$('.workspace-switch [role="tab"]'),index=tabs.indexOf(tab);
+    const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(index+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+    e.preventDefault();setWorkshopPane(tabs[next].dataset.pane);tabs[next].focus();return;
+  }
+  const tile=e.target.closest('.game-recipe[data-recipe]');
+  if(e.key==='Enter'&&e.shiftKey&&tile&&sim&&!busy){e.preventDefault();e.stopImmediatePropagation();prepareRecipe(Number(tile.dataset.recipe));}
+});
 
 document.addEventListener('click',e=>{
   const el=e.target.closest('button');if(!el||!sim)return;
@@ -392,8 +412,8 @@ document.addEventListener('click',e=>{
     if(saved&&!busy){try{checkpoint();const s=add(unpackItem(sim,saved.item));inspect=s.item;selectedStack=s.id;previousItem=null;render();save();toast('Saved item copied to the Cube.');}catch(error){undoStack.pop();toast(error.message,true);}}return;
   }
   if(el.dataset.pane){setWorkshopPane(el.dataset.pane);return;}
-  if(el.dataset.recipe!==undefined){selectRecipe(Number(el.dataset.recipe));return;}
-  if(el.dataset.stack){const s=state.stacks.find(s=>s.id===el.dataset.stack);if(s)inspectItem(s.item,s.id);return;}
+  if(el.dataset.recipe!==undefined){selectRecipe(Number(el.dataset.recipe),{keepBrowser:!!el.closest('#recipes-dialog')});return;}
+  if(el.dataset.stack){const s=state.stacks.find(s=>s.id===el.dataset.stack);if(s){inspect=s.item;selectedStack=s.id;previousItem=null;renderInspector();renderCube();renderLastCraft();}return;}
   if(el.dataset.stash){const s=state.stash.find(s=>s.id===el.dataset.stash);if(s)inspectItem(s.item);return;}
   if(el.dataset.target!==undefined){openPicker(recipe().ingredients[Number(el.dataset.target)]);return;}
   if(el.dataset.material){const row=sim.catalog.find(14,Number(el.dataset.material),false);if(row)addCatalog(row);return;}
@@ -418,7 +438,8 @@ document.addEventListener('click',e=>{
     'codex-start':()=>{if(busy)return;try{checkpoint();const item=configureCodex(sim,sim.makeItem(11,23,{a:freshSeed()%1000000000||1}),{sockets:recipe().orbs?.length||3}),s=add(item);inspect=s.item;selectedStack=s.id;previousItem=null;render();save();toast('Starting Codex added. Choose its target zone in the inspector.');}catch(error){undoStack.pop();toast(error.message,true);}},
     'codex-edit':()=>{const s=state.stacks.find(s=>isCodex(s.item));if(s)inspectItem(s.item,s.id);},
     'codex-apply':()=>{if(busy||!isCodex(inspect))return;try{const next=configureCodex(sim,inspect,{zone:$('#codex-zone').value,entries:Number($('#codex-entries').value),sockets:Number($('#codex-sockets').value)});const stack=[...state.stacks,...state.stash].find(s=>s.item===inspect);if(!stack)return;checkpoint();previousItem=stack.item;stack.item=next;inspect=next;mcResult=null;render();save();toast('Starting scenario updated. No crafting materials used.');}catch(error){toast(error.message,true);}},
-    'header-catalog':()=>openPicker(),'command-open':openCommands,
+    'header-catalog':()=>openPicker(),'preview-catalog':()=>openPicker(),'command-open':openCommands,
+    'recipe-use':()=>{closeDrawers();showView('workshop');},
     'recipes-open':()=>openDrawer('recipes-dialog'),'inspector-open':()=>openDrawer('inspector-dialog'),'inventory-open':()=>openDrawer('inventory-dialog'),
     'item-versions':()=>{const stack=[...state.stacks,...state.stash].find(s=>s.item===inspect);if(stack?.versions?.length)selectHistory(stack.versions[0].number);},'move-inspected':()=>moveInspected(),'remove-inspected':()=>moveInspected(true),
     'picker-show-all':()=>{pickerTarget=null;pickerPoolKey='';page=0;renderPicker();},

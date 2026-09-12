@@ -44,7 +44,7 @@ if(!probe) {
   assert.equal(itemRarity(initial),'Mythic');assert.equal(snapshot.rarity,'Mythic');
   assert.equal(snapshot.requiredLevel,67);assert.equal(snapshot.unresolved,false);
   assert.match(itemTooltipHtml(sim,initial),/Mythic/);
-  assert.match(itemTooltipHtml(sim,initial),/Level req\. 67/);
+  assert.match(itemTooltipHtml(sim,initial),/Requires Level 67/);
   assert.doesNotMatch(itemTooltipHtml(sim,initial),/Affix values are not yet included/);
   assert.throws(()=>configureItem(sim,initial,{crystal:2}),/cannot receive a Crystal socket/);
   const recipe=sim.recipes.find(r=>r.mechanic==='reroll_affixes');

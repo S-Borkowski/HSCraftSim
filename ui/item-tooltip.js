@@ -1,6 +1,6 @@
 import { isCodex } from '../engine/codex.js';
 import { TIER_NAMES } from '../engine/items.js';
-import { isCorrupted, starLevel, socketContents } from '../engine/item_setup.js';
+import { isCorrupted, starLevel, socketContents, configureItem } from '../engine/item_setup.js';
 import { socketContribution } from '../engine/socket_stats.js';
 import { rarityColor, itemRarity } from './rarity.js';
 import { vaultTier } from '../engine/vaults.js';
@@ -24,11 +24,33 @@ export function playerStatValue(stat) {
   return typeof value === 'number' ? String(Number(value.toFixed(2))) : cleanGameText(value);
 }
 
+/** Verified roll bounds for this setup, never raw bounds beside calculated totals. */
+export function statRollRange(stat) {
+  if(stat.identity||stat.itemDisplayCalculated||stat.value==null)return '';
+  const lo=stat.displayMin??stat.min,hi=stat.displayMax??stat.max;
+  if(!Number.isFinite(lo)||!Number.isFinite(hi)||lo===hi||lo>hi)return '';
+  return `${playerStatValue({value:lo})}–${playerStatValue({value:hi})}${stat.unit||''}`;
+}
+const cleanRolls=new WeakMap();
+function corruptionStats(sim,item) {
+  if(!isCorrupted(item))return null;
+  const signature=JSON.stringify([item.def,item.info]),cached=cleanRolls.get(item);
+  if(cached?.signature===signature&&cached.sim===sim)return cached.stats;
+  // Compare the same roll with corruption disabled. This is a display-only
+  // copy: no reroll, session RNG, socket mutation, or history write occurs.
+  const stats=new Map(sim.stats(configureItem(sim,item,{corrupted:false})).stats.map(s=>[s.key??s.name,s]));
+  cleanRolls.set(item,{signature,sim,stats});return stats;
+}
+const rangeHtml=stat=>{const range=statRollRange(stat);return range?` <small class="hover-roll-range" aria-label="Roll range ${esc(range)}">[${esc(range)}]</small>`:'';};
+
 /** Player tooltip: actual rolled item values, explanations, lore, sockets. */
 export function itemTooltipHtml(sim, item, { texts = {}, amount = 1, preview = false } = {}) {
   const generated = sim.stats(item), sockets = sim.sockets(item), def = item.def;
   const stats = generated.stats.filter(s => s.key !== 20 && s.name !== 'Sockets');
+  const clean=corruptionStats(sim,item);
+  const corruptionChanged=stat=>clean&&!stat.identity&&playerStatValue(clean.get(stat.key??stat.name)||{})!==playerStatValue(stat);
   const seen = new Set(), rows = [];
+  const primary=[];
   for (const stat of stats) {
     if (seen.has(stat.key ?? stat.name)) continue;
     const family = (stat.linkedKeys || []).map(key => stats.find(s => s.key === key)).filter(Boolean);
@@ -37,14 +59,19 @@ export function itemTooltipHtml(sim, item, { texts = {}, amount = 1, preview = f
       const level = family.find(s => s.valueKind === 'skill_level');
       const chance = family.find(s => s.valueKind === 'chance_percent');
       const effectName = playerStatName(skill).replace(/:\s*(Skill|Talent)$/,'');
-      rows.push(`<div class="hover-effect"><span>${esc(effectName)}</span><strong>${chance?`${esc(playerStatValue(chance))}% · `:''}${level?`Lv. ${esc(playerStatValue(level))} `:''}${esc(playerStatValue(skill))}</strong></div>`);
+      const corrupted=family.some(corruptionChanged);
+      rows.push(`<div class="hover-effect${corrupted?' hover-corruption':''}"><span>${esc(effectName)}</span> <strong>${chance?`${esc(playerStatValue(chance))}%${rangeHtml(chance)} · `:''}${level?`Lv. ${esc(playerStatValue(level))}${rangeHtml(level)} `:''}${esc(playerStatValue(skill))}</strong>${corrupted?'<small class="hover-source">Corruption</small>':''}</div>`);
       family.forEach(s => seen.add(s.key));
       continue;
     }
     seen.add(stat.key ?? stat.name);
-    const range = preview && stat.min != null && !stat.identity && !stat.itemDisplayCalculated;
-    const value = range ? `${stat.displayMin??stat.min}–${stat.displayMax??stat.max}` : playerStatValue(stat);
-    rows.push(`<div class="hover-stat ${stat.source?.startsWith('generated')?'hover-generated':''}"><span>${esc(playerStatName(stat))}</span><b>${esc(value)}${value==='—'?'':esc(stat.unit || '')}</b></div>`);
+    const value=playerStatValue(stat),corrupted=corruptionChanged(stat);
+    const isPrimary=[22,23,154].includes(stat.key)&&item.itemType<=10;
+    const classes=['hover-stat',isPrimary?'hover-primary':'',corrupted?'hover-corruption':'',stat.source==='crystal'?'hover-crystal':''].filter(Boolean).join(' ');
+    const number=`<b>${esc(value)}${value==='—'?'':esc(stat.unit||'')}</b>`,name=`<span>${esc(playerStatName(stat))}${isPrimary?':':''}</span>`;
+    const nameFirst=isPrimary||/\bby$|:\s*$/i.test(playerStatName(stat));
+    const row=`<div class="${classes}" data-stat-key="${esc(stat.key??stat.name)}">${nameFirst?`${name} ${number}`:`${number} ${name}`}${rangeHtml(stat)}${corrupted?'<small class="hover-source">Corruption</small>':stat.source==='crystal'?'<small class="hover-source">Crystal</small>':''}</div>`;
+    (isPrimary?primary:rows).push(row);
   }
   const description = itemDescription(item,texts);
   const rarity = itemRarity(item), equipment = item.itemType <= 10 || item.itemType === 18;
@@ -57,13 +84,15 @@ export function itemTooltipHtml(sim, item, { texts = {}, amount = 1, preview = f
   return `<article class="game-item-card" style="--item-color:${rarityColor(rarity)}">
     <header class="hover-heading">${item.row?.spr!=null?`<img src="../data/icons/${Number(item.row.spr)}.png" alt="">`:''}<div><h3>${esc(cleanGameText(item.name))}</h3><p>${esc(itemTypeName(item))}${equipment?` · <span class="rarity-name">${esc(rarity)}</span>`:''}${amount>1?` · ${amount.toLocaleString('en-US')} items`:''}</p></div>${equipment?`<span class="hover-tier">${TIER_NAMES[item.info.tier] || ''}</span>`:''}</header>
     ${flags.length?`<div class="hover-flags">${flags.map(f=>`<span>${esc(f)}</span>`).join('')}</div>`:''}
-    ${equipment?`<div class="item-stars" aria-label="${starLevel(item)} stars">${'★'.repeat(starLevel(item))}${'☆'.repeat(5-starLevel(item))}<small> ${starLevel(item)} / 5 · ${requiredLevel?`Level req. ${requiredLevel}`:''}</small></div>`:''}
+    ${equipment?`<div class="item-stars" aria-label="${starLevel(item)} stars">${'★'.repeat(starLevel(item))}${'☆'.repeat(5-starLevel(item))}<small> ${starLevel(item)} / 5</small></div>`:''}
+    ${primary.length?`<div class="hover-primary-stats">${primary.join('')}</div>`:''}
     ${rows.length?`<div class="hover-stats">${rows.join('')}</div>`:''}
     ${sockets.count>0?`<div class="hover-sockets"><span>${contents.filter(Boolean).length} / ${sockets.count} Sockets filled</span><div>${contents.map((s,i)=>s?.row?`<img class="${enhancements[i]?'enhanced-socket':''}" src="../data/icons/${s.row.spr}.png" alt="${esc(`${socketLabel(i)}: ${s.name}`)}">`:`<i class="${enhancements[i]?'enhanced-socket':''}" aria-label="${esc(socketLabel(i))}"></i>`).join('')}</div></div>${contents.some(Boolean)||enhancements.some(Boolean)?`<div class="hover-socket-list">${contents.map((s,i)=>s||enhancements[i]?`<div>${esc(socketLabel(i))} · <b>${esc(s?.name||'Empty')}</b>${!s||s.unknown?'':`<br>${sim.stats(s).stats.filter(stat=>!stat.identity).map(stat=>`${esc(playerStatName(stat))}: ${esc(playerStatValue({...stat,displayValue:typeof stat.value==='number'?(equipment?socketContribution(stat.value,enhancements[i]):stat.value):stat.displayValue}))}${esc(stat.unit||'')}`).join(' · ')}`}</div>`:'').join('')}</div>`:''}`:''}
     ${description.explanation?`<p class="hover-description">${esc(description.explanation)}</p>`:''}
     ${description.lore&&description.lore!==description.explanation?`<p class="hover-lore">${esc(description.lore)}</p>`:''}
     ${!rows.length&&!description.explanation&&!description.lore?'<p class="hover-description">An item used in Cube recipes.</p>':''}
-    ${preview&&rows.length?'<small class="hover-note">Possible stat ranges for this configuration</small>':''}
+    ${equipment?`<footer class="hover-requirements">Tier <span class="rarity-name">${esc(TIER_NAMES[item.info.tier]||'—')}</span>${requiredLevel?` · Requires Level ${requiredLevel}`:''}</footer>`:''}
+    ${(rows.length||primary.length)?`<small class="hover-note">${preview?'Example roll · ':''}Brackets show known roll ranges for this setup.${stats.some(s=>s.itemDisplayCalculated)?' Damage, attack speed and defense totals use the current roll.':''}</small>`:''}
     ${isCodex(item)?`<small class="hover-note">${esc(generated.warnings.join(' '))}</small>`:''}
     ${footer?`<small class="hover-note">${esc(footer)}</small>`:''}
   </article>`;

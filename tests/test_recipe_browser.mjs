@@ -45,7 +45,9 @@ try{
     browser('click','#recipes-open');browser('fill','#recipe-search','Satanic Dice');browser('snapshot','-i');
     const choice=evaluate(`(()=>{const b=document.querySelector('#recipe-list [data-recipe]');return {id:b.dataset.recipe,name:b.querySelector('strong').textContent};})()`);
     assert.match(choice.name,/Satanic Dice/i);
-    browser('click',`#recipe-list [data-recipe="${choice.id}"]`);closed();
+    browser('click',`#recipe-list [data-recipe="${choice.id}"]`);
+    assert.equal(evaluate(`document.querySelector('#recipes-dialog').open`),true,'Single click keeps the tile available for double-click preparation');
+    browser('click','#recipe-use');closed();
     assert.equal(evaluate(`document.querySelector('#active-recipe-name').textContent`),choice.name);
     browser('click','#recipes-open');browser('fill','#recipe-search','');browser('press','Escape');closed();
     assert.deepEqual(saved(),before,'Browsing and selecting recipes must preserve items, RNG and History');

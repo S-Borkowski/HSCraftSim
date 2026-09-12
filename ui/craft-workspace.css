@@ -1,85 +1,71 @@
-/* A compact Cube, recipe and saved result share one viewport. */
-.game-skin .workspace {
-  grid-template-rows:clamp(340px,calc(67dvh - 94px),510px) minmax(175px,1fr);
-  gap:10px;
-}
-.game-skin #workshop-view {
-  grid-template-columns:clamp(320px,28vw,420px) repeat(2,minmax(0,1fr));
-  grid-template-rows:minmax(0,1fr) 58px;
-  gap:10px 12px;padding:10px;
-}
-.game-skin .cube-panel {
-  grid-column:1;grid-row:1;grid-template-rows:36px minmax(0,1fr) 34px;
-  min-width:0;overflow:hidden;
-}
-.game-skin .cube-panel>.panel-title h2 {font-size:26px;letter-spacing:1px}
-.game-skin .cube-panel .segmented {position:static;margin-left:auto;opacity:1;flex:none}
+/* Cube actions stay with the Cube; recipe and live item each keep their scroll. */
+.game-skin .workspace {grid-template-rows:minmax(300px,2.4fr) minmax(215px,1fr);gap:10px}
+.game-skin #workshop-view {grid-template-columns:clamp(270px,26vw,390px) minmax(0,1fr) minmax(0,1.06fr);grid-template-rows:minmax(0,1fr) 114px;gap:8px 12px;padding:10px}
+.game-skin .cube-panel {grid-column:1;grid-row:1;grid-template-rows:34px minmax(0,1fr) 34px;min-width:0;overflow:hidden}
 .game-skin .cube-panel>.panel-title {justify-content:space-between;gap:8px;padding:0 5px}
+.game-skin .cube-panel>.panel-title h2 {font-size:25px;letter-spacing:1px}
+.game-skin .cube-panel .segmented {position:static;margin-left:auto;opacity:1;flex:none}
 .game-skin .cube-toolbar {position:static;height:34px;pointer-events:auto;padding:0 4px;justify-content:space-between}
-.game-skin .cube-toolbar button {font-size:12px;min-height:30px;padding:4px 8px}
+.game-skin .cube-toolbar button {font-size:11px;min-height:30px;padding:4px 7px}
 .game-skin .cube-stage {min-width:0}
-.game-skin .recipe-detail {grid-column:2;grid-row:1;min-width:0}
-.game-skin .detail-header {min-height:51px;padding:8px 10px;flex:none}
-.game-skin .detail-description {font:13px/1.45 'Segoe UI',sans-serif}
-.game-skin .ingredient-row {min-height:37px;padding:5px 7px}
+.game-skin .recipe-detail {grid-column:2;grid-row:1/3;min-width:0}
+.active-recipe-heading {display:flex;justify-content:space-between;gap:8px;padding:8px 10px;color:#e0cc98;font:16px/1.2 FontinCaps,serif;border-bottom:1px solid #3e2c30;flex:none}
+.active-recipe-heading span {color:#ab9684;font:10px/1.6 'Segoe UI',sans-serif;text-align:right}
+.game-skin .detail-header {min-height:50px;padding:9px 10px;flex:none}
+.game-skin .detail-description {font:13px/1.5 'Segoe UI',sans-serif}
+.game-skin .ingredient-row {min-height:39px;padding:6px 7px}
 .game-skin .ingredient-row>span {font-size:12px}
 .game-skin .ingredient-row img {flex:none}
 .game-skin .ingredient-row .pick-target,.game-skin .detail-tools button {font-size:12px;min-height:30px}
-.game-skin .craft-blocker p {font:12px/1.45 'Segoe UI',sans-serif;color:#e3c0a3}
 .game-skin .recipe-body {min-height:0;overflow:auto;overscroll-behavior:contain}
-.game-skin #craft-dock {grid-column:1/-1;grid-row:2;padding:7px 3px 0;border-top:1px solid #58403a}
-.game-skin .craft-actions {
-  display:grid;grid-template-columns:minmax(0,1fr) 138px minmax(125px,230px) 96px;grid-template-rows:44px;
-  gap:12px;align-items:center;height:auto;
-}
-.game-skin .craft-dock-info {display:block!important;grid-column:1;grid-row:1}
-.game-skin .craft-dock-info strong {display:block;font:14px FontinCaps,serif;margin-bottom:3px}
-.game-skin .craft-dock-info small {display:block;font:12px/1.35 'Segoe UI',sans-serif;color:#b6c9a4;overflow:visible;-webkit-line-clamp:unset}
-.game-skin .craft-dock-info small.blocked {color:#e3b695}
-.game-skin .craft-actions #dock-prepare {display:block;grid-column:2;grid-row:1;justify-self:stretch;margin:0;min-width:0;min-height:38px;padding:6px 8px;font:12px 'Segoe UI',sans-serif}
-.game-skin .craft-actions .transmute {grid-column:3;grid-row:1;height:44px;font-size:23px}
-.game-skin #batch-open {grid-column:4;grid-row:1;font:12px 'Segoe UI',sans-serif;min-height:38px;padding:6px 9px}
-.game-skin #batch-open:disabled {color:#897c79;border-color:#33282c;background:#100c10;opacity:.7}
-.game-skin .workspace-switch {display:none!important}
-
-.game-skin .last-craft-panel {
-  grid-column:3;grid-row:1;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden;
-  border:7px solid transparent;border-image:url('../data/game/Quest_Text_Border_Dark_spr_0.png') 12 fill / 7px;
-  background:#110c10f2;
-}
-.last-craft-heading {display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 10px;min-height:36px;flex:none;border-bottom:1px solid #3e2c30}
-.game-skin .last-craft-heading h2 {font:19px/1.2 FontinCaps,serif;color:#e0cc98;margin:0}
-.game-skin .last-craft-link,.game-skin .more-changes {font:11px/1.3 'Segoe UI',sans-serif;color:#d6c291;padding:5px 0;background:transparent;border:0;text-align:left;min-height:28px}
-.last-craft-summary {padding:9px 10px;flex:none;border-bottom:1px solid #36272c}
-.last-craft-outcome {margin-top:5px;color:#d8c9ad;font:11px/1.35 'Segoe UI',sans-serif}
-.last-craft-outcome[data-outcome=corrupted] {color:#f0aec5}
-.last-craft-outcome[data-outcome=level_down] {color:#e7c08f}
+.game-skin .craft-blocker p {font:12px/1.45 'Segoe UI',sans-serif;color:#e3c0a3}
 .game-skin .star-roll-help,.game-skin .comparison-outcome {font:12px/1.45 'Segoe UI',sans-serif;color:#d6c3a8}
-.last-craft-identity {display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 9px;align-items:center}
-.last-craft-identity>img {width:32px;height:38px;object-fit:contain;image-rendering:pixelated;grid-row:1}
-.last-craft-identity>div {min-width:0}
-.game-skin .last-craft-identity .rarity-name {font:16px/1.2 FontinCaps,serif;color:var(--item-color,#dfcfa9);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.last-craft-identity small {display:block;color:#b7a797;font:11px/1.4 'Segoe UI',sans-serif;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.last-craft-status {font:11px/1.4 'Segoe UI',sans-serif;color:#dbcbab;grid-column:3;grid-row:1;max-width:75px;text-align:right}
-.last-craft-identity:not(:has(>img))>div,.last-craft-identity:not(:has(>img))>.last-craft-status {grid-column:1/-1}
-.last-craft-body {min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 10px 10px;scrollbar-gutter:stable}
-.last-craft-empty {margin:1px 0;color:#d8c9ad;font:13px/1.5 'Segoe UI',sans-serif}
-.last-craft-note {font:12px/1.6 'Segoe UI',sans-serif;color:#baa998;margin:12px 0}
-.craft-differences {margin:0}
-.craft-differences>div {display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,auto);align-items:center;gap:6px 10px;min-height:36px;padding:6px 0;border-bottom:1px solid #36292d}
-.craft-differences dt {font:12px/1.3 'Segoe UI',sans-serif;color:#d8cbb9;overflow-wrap:anywhere}
-.craft-differences dd {display:flex;align-items:baseline;justify-content:flex-end;gap:6px;flex-wrap:wrap;max-width:220px;margin:0;font:13px/1.35 'Segoe UI',sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.craft-differences dd>span:first-child {color:#ac9b92}
-.craft-differences dd>strong {color:#f3dfba;font-weight:600}
-.craft-differences .difference-arrow {color:#a9906d}
-.craft-differences dd>small {margin-left:auto;color:#bbd0e3;font-size:11px}
-.last-craft-recent {margin-top:12px;border-top:1px solid #554034;padding-top:9px}
-.last-craft-recent>summary {cursor:pointer;color:#d9c496;font:13px 'Segoe UI',sans-serif;min-height:30px}
+.game-skin #craft-dock {grid-column:1;grid-row:2;display:block;padding:7px 4px 0;border-top:1px solid #58403a;min-width:0}
+.game-skin .craft-actions {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:40px minmax(28px,auto) 24px;gap:4px 8px;align-items:center;height:auto;width:100%}
+.game-skin .craft-actions #dock-prepare {display:block;grid-column:1;grid-row:1;justify-self:stretch;margin:0;min-width:0;min-height:40px;padding:5px;color:#f2e1cb;border-color:#745348;background:#24151ce6;font:12px 'Segoe UI',sans-serif}
+.game-skin .craft-actions #dock-prepare:hover:not(:disabled) {background:#38202a;border-color:#b08971}
+.game-skin .craft-actions #dock-prepare:disabled {background:#130e12;color:#9c8e87;border-color:#423139;opacity:1}
+.game-skin .craft-actions .transmute {grid-column:2;grid-row:1;height:40px;font-size:24px}
+.game-skin .craft-dock-info {display:block!important;grid-column:1/-1;grid-row:2;align-self:start}
+.game-skin .craft-dock-info strong {display:none}
+.game-skin .craft-dock-info small {display:block;font:11px/1.35 'Segoe UI',sans-serif;color:#bdcdae;white-space:normal;overflow:visible;-webkit-line-clamp:unset}
+.game-skin .craft-dock-info small.blocked {color:#e3b695}
+.game-skin #batch-open {grid-column:1/-1;grid-row:3;justify-self:center;min-height:24px;padding:2px 8px;font:11px 'Segoe UI',sans-serif;color:#cbb498;background:transparent;border:0}
+.game-skin #batch-open:disabled {color:#8a7b77;opacity:1}
+.game-skin .workspace-switch {display:none!important}
+.game-skin .last-craft-panel {grid-column:3;grid-row:1/3;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden;border:7px solid transparent;border-image:url('../data/game/Quest_Text_Border_Dark_spr_0.png') 12 fill / 7px;background:#080709f5}
+.last-craft-heading {display:flex;align-items:center;gap:7px;padding:6px 10px;min-height:36px;flex:none;border-bottom:1px solid #3e2c30}
+.game-skin .last-craft-heading h2 {font:18px/1.2 FontinCaps,serif;color:#e0cc98;margin:0}
+.preview-live {font:9px 'Segoe UI',sans-serif;letter-spacing:1px;color:#a5c8a1}
+.preview-expand {display:none}
+.game-skin .last-craft-link {margin-left:auto;font:11px/1.3 'Segoe UI',sans-serif;color:#d6c291;padding:4px 0;background:transparent;border:0;text-align:right;min-height:26px}
+.last-craft-summary {padding:6px 10px;flex:none;border-bottom:1px solid #30252a;color:#b8a99c;font:11px/1.4 'Segoe UI',sans-serif}
+.preview-current-name {display:none}
+.item-preview-body {min-height:0;flex:1;overflow:auto;overscroll-behavior:contain;padding:9px 12px 14px;scrollbar-gutter:stable}
+.item-preview-body .game-item-card {font-size:14px}
+.item-preview-body .hover-heading {padding:2px 0 7px;gap:7px}
+.item-preview-body .hover-heading img {width:28px;height:34px}
+.item-preview-body .hover-heading h3 {font-size:21px;margin-bottom:4px}
+.item-preview-body .item-stars {font-size:15px;margin:0 0 6px}
+.item-preview-body .hover-primary-stats {padding:4px 0;margin-bottom:6px}
+.item-preview-body .hover-stat {padding:2px 0;line-height:1.3}
+.item-preview-body .hover-primary {font-size:15px}
+.preview-empty {display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;text-align:center;padding:10px;font:13px/1.6 'Segoe UI',sans-serif;color:#b6a594}
+.preview-empty>img {width:40px;height:55px;object-fit:contain;image-rendering:pixelated;margin-bottom:10px}
+.preview-empty h3 {font:21px FontinCaps,serif;color:#d3bd90;margin:8px 0}
+.preview-empty p {margin:4px 0 16px;max-width:260px}
+.last-craft-recent {flex:none;min-height:0;margin:0;padding:0 10px;border-top:1px solid #49342c;overflow:auto;overscroll-behavior:contain;max-height:42%}
+.last-craft-recent>summary {cursor:pointer;color:#d9c496;font:12px 'Segoe UI',sans-serif;min-height:34px;padding:9px 0;position:sticky;top:0;background:#100b10;z-index:1}
 .last-craft-recent>summary>span {color:#b4a59a;margin-left:6px;font-size:11px}
-.game-skin .last-craft-recent .recent-crafts {border:0;padding:0;margin:0}
+.game-skin .last-craft-recent .recent-crafts {border:0;padding:0 0 8px;margin:0}
 .last-craft-recent .recent-crafts>header,.last-craft-recent .recent-crafts>p {display:none}
 .last-craft-recent .recent-craft-list {grid-template-columns:minmax(0,1fr)}
 .game-skin .last-craft-recent .recent-craft {padding:8px;background:#151015}
+.recipe-gesture-hint {color:#c2ac90;font:10px 'Segoe UI',sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-footer #recipe-use {display:none}
+.drawer .sidebar-footer #recipe-use {display:block;font-size:12px;min-height:32px;padding:4px 12px}
+.game-skin .drawer>.recipe-panel {grid-template-rows:40px 38px 34px 34px minmax(0,1fr) 46px}
+.drawer .sidebar-footer #catalog-count,.drawer .sidebar-footer #data-info {display:none}
 .game-skin .batch-dialog {width:min(440px,calc(100vw - 24px));height:auto;max-height:calc(100dvh - 24px)}
 .batch-body {padding:16px;overflow:auto;color:#d5c8b6;font:13px/1.6 'Segoe UI',sans-serif}
 .batch-body p {margin:0 0 12px}
@@ -87,31 +73,21 @@
 .batch-options {display:flex;gap:10px;margin-top:18px}
 .game-skin .batch-options button {flex:1;min-height:42px;background:#2f161e;border-color:#846153;color:#f1dbb5;font:15px FontinCaps,serif}
 .game-skin .batch-options button:disabled {background:#151015;color:#8f8281;border-color:#3c3035}
-.game-skin .topbar button:disabled {cursor:wait}
 .game-skin .workspace:has(#workshop-view[hidden]) {grid-template-rows:minmax(0,1fr)}
-
-@media(min-width:650px) and (max-width:1199px) {
-  .game-skin .workspace {grid-template-rows:minmax(395px,1.7fr) minmax(180px,1fr);gap:8px}
-  .game-skin #workshop-view {grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);grid-template-rows:minmax(0,1fr) 146px 58px;gap:8px 10px;padding:7px}
+@media(min-width:650px) and (max-width:999px) {
+  .game-skin .workspace {grid-template-rows:minmax(365px,2fr) minmax(205px,1fr);gap:8px}
+  .game-skin #workshop-view {grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);grid-template-rows:minmax(0,1fr) 145px 114px;gap:8px;padding:6px}
   .game-skin .cube-panel {grid-column:1;grid-row:1/3}
+  .game-skin #craft-dock {grid-column:1;grid-row:3}
   .game-skin .recipe-detail {grid-column:2;grid-row:1}
-  .game-skin .last-craft-panel {grid-column:2;grid-row:2}
-  .game-skin #craft-dock {grid-row:3}
-  .last-craft-heading {min-height:32px;padding:3px 8px}
-  .game-skin .last-craft-heading h2 {font-size:17px}
-  .last-craft-summary {padding:5px 8px}
-  .last-craft-identity {grid-template-columns:auto minmax(0,1fr) auto;gap:5px 8px}
-  .last-craft-identity>img {width:24px;height:29px;grid-row:1}
-  .last-craft-status {grid-column:3;grid-row:1;text-align:right}
-  .last-craft-identity small {margin-top:1px;font-size:10px}
-  .craft-differences>div {padding:5px 0}
-  .last-craft-note {margin:6px 0}
+  .game-skin .last-craft-panel {grid-column:2;grid-row:2/4}
+  .game-skin .last-craft-heading h2 {font-size:16px}
 }
 @media(max-width:649px) {
-  .game-skin .workspace {grid-template-rows:minmax(390px,1.65fr) minmax(155px,1fr);gap:7px}
-  .game-skin #workshop-view {grid-template-columns:minmax(0,1fr);grid-template-rows:26px minmax(0,1fr) 96px 82px;padding:3px;gap:5px 0}
+  .game-skin .workspace {grid-template-rows:minmax(400px,2fr) minmax(205px,1fr);gap:7px}
+  .game-skin #workshop-view {grid-template-columns:minmax(0,1fr);grid-template-rows:26px minmax(0,1fr) 78px 110px;padding:4px;gap:5px 0}
   .game-skin .workspace-switch {display:flex!important;grid-column:1;grid-row:1}
-  .game-skin .cube-panel {grid-column:1;grid-row:2;grid-template-rows:27px minmax(0,1fr) 32px}
+  .game-skin .cube-panel {grid-column:1;grid-row:2;grid-template-rows:27px minmax(0,1fr) 30px}
   .game-skin .cube-panel>.panel-title h2 {font-size:22px}
   .game-skin .recipe-detail {grid-column:1;grid-row:2;display:none}
   .game-skin #workshop-view[data-pane=recipe]>.recipe-detail {display:flex}
@@ -120,42 +96,25 @@
   .last-craft-heading {padding:3px 7px;min-height:28px}
   .game-skin .last-craft-heading h2 {font-size:16px}
   .game-skin .last-craft-link {font-size:10px;min-height:22px}
-  .last-craft-summary {padding:3px 7px;overflow:auto;border:0;min-height:0}
-  .last-craft-identity {grid-template-columns:auto minmax(0,1fr) auto;gap:5px}
-  .last-craft-identity>img {width:24px;height:30px;grid-row:1}
-  .game-skin .last-craft-identity .rarity-name {font-size:13px}
-  .last-craft-identity small {font-size:10px;margin-top:2px}
-  .last-craft-status {grid-column:3;grid-row:1;font-size:10px;text-align:right;max-width:68px}
-  .last-craft-empty {font-size:12px;margin:5px 0}
-  .last-craft-body {display:none}
-  .game-skin #craft-dock {grid-column:1;grid-row:4;padding:2px 4px}
-  .game-skin .craft-actions {grid-template-columns:minmax(0,1fr) minmax(0,1fr) 76px;grid-template-rows:32px 40px;gap:2px 6px}
-  .game-skin .craft-dock-info {grid-column:1/-1;grid-row:1}
-  .game-skin .craft-dock-info strong {display:none}
-  .game-skin .craft-dock-info small {font-size:11px;line-height:1.25}
-  .game-skin .craft-actions #dock-prepare {grid-column:1;grid-row:2;min-height:39px;font-size:11px;padding:4px}
-  .game-skin .craft-actions .transmute {grid-column:2;grid-row:2;height:39px;font-size:22px}
-  .game-skin #batch-open {grid-column:3;grid-row:2;min-height:34px;font-size:11px;padding:5px}
-  .game-skin .detail-header {min-height:41px;padding:5px 7px}
-  .game-skin .detail-description {font-size:12px;margin:7px 0}
+  .last-craft-summary {padding:3px 7px;font-size:10px}
+  .preview-current-name {display:block;color:#e5d1a3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:13px FontinCaps,serif}
+  .item-preview-body {display:none;padding:5px 10px}
+  .game-skin .preview-expand {display:block;margin-left:auto;padding:3px 4px;background:transparent;border:0;color:#e0c79b;font:11px 'Segoe UI',sans-serif}
+  .game-skin #workshop-view[data-pane=item]>.cube-panel {display:none}
+  .game-skin #workshop-view[data-pane=item]>.last-craft-panel {grid-row:2/4}
+  #workshop-view[data-pane=item] .item-preview-body {display:block}
+  #workshop-view[data-pane=item] .preview-expand {display:none}
+  #workshop-view[data-pane=item] .last-craft-recent {display:block}
+  .last-craft-recent {display:none}
+  .game-skin #craft-dock {grid-column:1;grid-row:4;padding:3px 4px 0}
+  .game-skin .craft-actions {grid-template-rows:39px minmax(28px,auto) 24px;gap:3px 8px}
+  .game-skin .craft-actions .transmute {height:39px}
+  .game-skin .craft-actions #dock-prepare {min-height:39px}
+  .recipe-gesture-hint {font-size:9px;max-width:190px}
+  .active-recipe-heading {padding:5px 8px;font-size:14px}
 }
-@media(max-height:650px) and (min-width:650px) {
-  .game-skin .workspace {grid-template-rows:minmax(0,1.65fr) minmax(125px,1fr);gap:6px}
-  .game-skin #workshop-view {padding:4px;gap:5px 9px}
-  .game-skin .cube-panel {grid-template-rows:28px minmax(0,1fr) 30px}
-  .game-skin .cube-panel>.panel-title h2 {font-size:22px}
-  .game-skin .last-craft-heading {min-height:30px;padding:3px 7px}
-  .last-craft-summary {padding:5px 7px}
-  .craft-differences>div {padding:4px 0}
-  .craft-differences dd {margin-top:2px}
-}
-@media(max-height:650px) and (min-width:650px) and (max-width:1199px) {
-  .game-skin #workshop-view {grid-template-rows:minmax(0,1fr) 102px 53px}
-  .game-skin .last-craft-panel .last-craft-body {display:none}
-}
-@media(max-height:700px) and (max-width:649px) {
-  .game-skin .workspace {grid-template-rows:minmax(0,1.75fr) minmax(110px,1fr)}
-  .game-skin #workshop-view {grid-template-rows:24px minmax(0,1fr) 76px 76px;gap:3px}
-  .last-craft-status {display:none}
-  .game-skin .cube-panel {grid-template-rows:24px minmax(0,1fr) 28px}
+@media(max-height:700px) and (min-width:650px) {
+  .game-skin .workspace {grid-template-rows:minmax(270px,2fr) minmax(190px,1fr);gap:6px}
+  .game-skin #workshop-view {padding:4px;gap:5px 8px}
+  .game-skin .cube-panel {grid-template-rows:27px minmax(0,1fr) 29px}
 }

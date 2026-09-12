@@ -28,13 +28,13 @@ const high=setSocketContent(sim,base,0,sim.catalog.find(15,33,false));
 assert.equal(high.info.runeword,undefined);
 assert.equal(high.info.requiredLevel,69,'An incomplete Rune sequence still raises the level');
 assert.equal(sim.makeItem(15,33).info.requiredLevel,69);
-assert.match(itemTooltipHtml(sim,high),/Level req\. 69/);
+assert.match(itemTooltipHtml(sim,high),/Requires Level 69/);
 const snapshot=captureItem(sim,high);
 assert.equal(snapshot.requiredLevel,69);
 assert.deepEqual(captureItem(sim,unpackItem(sim,packItem(high))),snapshot);
 const gem=setSocketContent(sim,high,0,sim.catalog.find(15,69,false));
 assert.equal(gem.info.requiredLevel,38);
-assert.match(itemTooltipHtml(sim,gem),/Level req\. 38/);
+assert.match(itemTooltipHtml(sim,gem),/Requires Level 38/);
 assert.equal(snapshot.requiredLevel,69,'Later socket edits cannot overwrite History');
 assert.equal(setSocketContent(sim,gem,0,null).info.requiredLevel,base.info.requiredLevel);
 

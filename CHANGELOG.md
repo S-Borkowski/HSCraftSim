@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.3
+
+- Moved Add ingredients and Craft together directly below the Cube, with a visible eligibility reason and a secondary Batch craft menu.
+- Added an Active Recipe heading and double-click / Shift + Enter recipe preparation. Materials appear in the Cube without crafting or creating target equipment; selected alternative ingredients are respected.
+- Replaced the main Last craft difference list with a persistent live Item preview. Cube selection updates the preview; Inspect / E opens editing controls separately.
+- Updated item sheets with centered game-style affix lines, current values alongside known roll ranges, separate damage/defense totals, and text-labeled red corruption effects.
+- Kept frozen History comparisons and the ten most recent craft records accessible from the preview. Viewing live items never rewrites saved results.
+- Added a mobile Item tab and keyboard navigation, and corrected recipe-list space on shorter screens.
+- Verified 30 craft browser scenarios across six viewport sizes and both Cube sizes, five recipe-browser layouts, general regressions, static packaging and Python/WebView2 startup. Craft rules and saved-session schema are unchanged.
+
 ## 1.0.2
 
 - Added persistent Created by Falor credit and direct Falor / Graxy_TV Discord links.

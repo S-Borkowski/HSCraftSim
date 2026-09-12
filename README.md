@@ -2,7 +2,7 @@
 
 # HSCraftSim — Cube Workshop
 
-A Hero Siege Cube crafting simulator with an English interface. Version 1.0.2. Runs locally or as a static website when its compatible local data has been supplied.
+A Hero Siege Cube crafting simulator with an English interface. Version 1.0.3. Runs locally or as a static website when its compatible local data has been supplied.
 
 ## Start
 
@@ -19,13 +19,13 @@ Opening `index.html` directly from disk now displays an English launcher guide i
 ## Workshop
 
 - **Created by Falor** stays visible under the logo. The footer links to Falor's Discord for bug reports and feedback, Graxy_TV's Discord for community, and **About / Credits** for creator, host and game credits. Discord opens externally and leaves the Cube session in place.
-- The workspace fits the viewport: Cube, recipe and Last craft share three columns on desktop. Long recipe lists and item details scroll within their panels. Below 650 pixels, Cube and Selected recipe tabs share the same workspace while the result summary and craft controls remain visible.
+- The workspace fits the viewport: Cube, **Active Recipe** and **Item preview** share three columns on desktop. Long recipe lists and item details scroll within their panels. Below 650 pixels, **Cube / Active recipe / Item** tabs share the workspace while the item summary and craft controls remain visible.
 - **Recipes** opens the searchable recipe browser. Filter by category, favorites, or recipes ready to craft.
 - **Item catalog** is always available in the header. Hover for stats and descriptions; click to add an item.
-- **Add ingredients** supplies missing materials. Required equipment is chosen separately.
-- **Last craft** shows saved before/after differences and the recorded outcome. Its **Recent crafts** list keeps the last ten material uses separate, even on the same equipment. **Full history** opens the complete journal.
-- The craft bar stays visible. **Add ingredients** places missing materials in the Cube; **Craft** consumes them only when pressed separately and places results directly in the Cube. Results that do not fit leave the inputs untouched. **Batch craft** uses existing materials only.
-- Hover any Cube, inventory, catalog or recipe item for its game-style tooltip. Click to pin the inspector. Use **Move to inventory / Move to Cube**, drag and drop, or right-click to remove an item.
+- **Double-click a recipe**, or focus it and press **Shift + Enter**, to supply missing materials without crafting. Required equipment is chosen separately; any selected alternative ingredient is respected. In the recipe browser, a single click selects the recipe; **Use recipe** returns to the workshop.
+- **Item preview** follows the selected Cube item after each craft. It shows current values beside known roll ranges, separates final damage/defense totals, and labels corruption effects in red with **Corruption** text. Calculated totals are not assigned misleading raw roll ranges. **Compare last craft** opens the saved before/after comparison. **Recent crafts** keeps the last ten material uses separate, even on the same equipment.
+- **Add ingredients** and **Craft** stay together directly below the Cube. Adding materials does not craft. **Craft** consumes them only when pressed separately and places results directly in the Cube. Results that do not fit leave the inputs untouched. **Batch craft** uses existing materials only.
+- Hover any Cube, inventory, catalog or recipe item for its game-style tooltip. Click a Cube item to keep it in the live preview; **Inspect / E** opens its editing controls. Use **Move to inventory / Move to Cube**, drag and drop, or right-click to remove an item.
 - **Undo / Ctrl Z** restores the previous action, including consumption and results. Undo history resets on page reload; the session itself is saved.
 - **Probabilities** runs 1,000–100,000 independent trials in a Web Worker without consuming items or blocking the interface. Random item recipes display named result distributions.
 - Equipment opens directly in one panel with live stats, stars, corruption, Crystal effects and sockets. Existing-item edits save immediately and support Undo. The socket browser has searchable **Runes / Gems / Jewels** cards; click to insert or drag onto a socket.
@@ -36,6 +36,7 @@ Opening `index.html` directly from disk now displays an English launcher guide i
 |---|---|
 | Ctrl K | Search recipes and jump to tools |
 | R or / | Recipe browser |
+| Shift + Enter on a recipe | Add missing materials without crafting |
 | I | Item catalog |
 | E | Item inspector |
 | 1 / 2 / 3 | Workshop / Probabilities / History |

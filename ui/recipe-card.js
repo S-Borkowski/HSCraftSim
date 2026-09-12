@@ -8,7 +8,7 @@ export function recipeCardHtml(recipe,{selected=false,favorite=false,unavailable
   const ingredients=recipe.orbs
     ? [{itemId:null,amount:1,name:'Codex'},...recipe.orbs.map(id=>recipe.ingredients.find(i=>i.itemId===id)).map(i=>({...i,amount:1}))]
     : recipe.ingredients;
-  return `<button class="recipe-row game-recipe ${selected?'active':''} ${unavailable?'unsupported':''} ${context?.dimmed?'dimmed':''} ${context?.ready?'craft-ready':''}" data-recipe="${recipe.index}" data-context="${context?.rank??2}" aria-pressed="${selected}" aria-label="${esc(recipe.name)} — ${esc(summary)}" aria-description="${esc(context?.reason||'')}">
+  return `<button class="recipe-row game-recipe ${selected?'active':''} ${unavailable?'unsupported':''} ${context?.dimmed?'dimmed':''} ${context?.ready?'craft-ready':''}" data-recipe="${recipe.index}" data-context="${context?.rank??2}" aria-pressed="${selected}" aria-label="${esc(recipe.name)} — ${esc(summary)}" aria-description="${esc(context?.reason||'')} Double-click or press Shift + Enter to add missing ingredients. Craft is a separate action.">
     <strong class="game-recipe-name">${esc(recipe.name)}</strong>${favorite?'<span class="game-recipe-favorite" aria-label="Favorite">★</span>':''}
     <span class="game-recipe-art ${ingredients.length>4?'many-ingredients':''}">
       ${showOutput?`<span class="game-recipe-result" data-hover-catalog="${output.catalogId}" data-preview="true">${art(output.sprite)}${output.amount>1?`<span>×${output.amount}</span>`:''}</span>`:''}

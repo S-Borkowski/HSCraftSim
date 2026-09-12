@@ -99,7 +99,10 @@ def main():
                         const checks = {
                             opened: dialog.open,
                             creator: document.querySelector('.creator-credit').textContent.trim(),
-                            host: document.querySelector('#host-name').textContent.trim(),
+                            aboutCreator: document.querySelector('#creator-name').textContent.trim(),
+                            hostCount: document.querySelectorAll('#host-name, .host-card').length,
+                            edition: document.body.dataset.edition,
+                            footerLinks: [...document.querySelectorAll('.community-footer a')].map(a => a.href),
                             fits: rect.left >= 0 && rect.top >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight,
                             links
                         };
@@ -109,8 +112,14 @@ def main():
                         return checks;
                     })()""")
                     result['credits'] = credits
-                    expected_links = ['https://discord.gg/3wWfYubgb3', 'https://discord.gg/fDtXAQu5c3']
-                    result['ok'] = all(credits.get(key) for key in ['opened', 'fits', 'closed', 'focusRestored']) and credits['creator'] == 'Created by Falor' and credits['host'] == 'Graxy_TV' and [link['url'] for link in credits['links']] == expected_links and all(link['target'] == '_blank' and 'noopener' in link['rel'] for link in credits['links'])
+                    expected_edition = build_info['edition']
+                    expected_links = ['https://discord.gg/3wWfYubgb3'] if expected_edition == 'community' else []
+                    result['ok'] = (all(credits.get(key) for key in ['opened', 'fits', 'closed', 'focusRestored'])
+                        and credits['creator'] == 'Created by Falor' and credits['aboutCreator'] == 'Falor'
+                        and credits['hostCount'] == 0 and credits['edition'] == expected_edition
+                        and [link['url'] for link in credits['links']] == expected_links
+                        and credits['footerLinks'] == expected_links
+                        and all(link['target'] == '_blank' and 'noopener' in link['rel'] for link in credits['links']))
                     if not result['ok']:
                         result['error'] = 'About / Credits navigation or community links failed verification.'
                 flush_session()

@@ -2,7 +2,7 @@
 
 # HSCraftSim — Cube Workshop
 
-A Hero Siege Cube crafting simulator with an English interface. Version 1.0.3. Runs locally or as a static website when its compatible local data has been supplied.
+A Hero Siege Cube crafting simulator with an English interface. Version 1.0.4 (Community edition). Runs locally or as a static website when its compatible local data has been supplied.
 
 ## Start
 
@@ -18,9 +18,10 @@ Opening `index.html` directly from disk now displays an English launcher guide i
 
 ## Workshop
 
-- **Created by Falor** stays visible under the logo. The footer links to Falor's Discord for bug reports and feedback, Graxy_TV's Discord for community, and **About / Credits** for creator, host and game credits. Discord opens externally and leaves the Cube session in place.
+- **Created by Falor** stays visible under the logo and in About. Community edition includes Falor's Discord in About and the footer. Website edition has creator attribution without Discord links. Neither edition shows a host credit. See [editions](EDITIONS.md).
 - The workspace fits the viewport: Cube, **Active Recipe** and **Item preview** share three columns on desktop. Long recipe lists and item details scroll within their panels. Below 650 pixels, **Cube / Active recipe / Item** tabs share the workspace while the item summary and craft controls remain visible.
 - **Recipes** opens the searchable recipe browser. Filter by category, favorites, or recipes ready to craft.
+- **Suggested next step** puts an applicable Crystal-removal or Wisdom recipe first when Cube items need it, even before its materials are supplied. The suggestion respects your recipe filters and disappears when the effect is removed; Undo and random rolls are unchanged.
 - **Item catalog** is always available in the header. Hover for stats and descriptions; click to add an item.
 - **Double-click a recipe**, or focus it and press **Shift + Enter**, to supply missing materials without crafting. Required equipment is chosen separately; any selected alternative ingredient is respected. In the recipe browser, a single click selects the recipe; **Use recipe** returns to the workshop.
 - **Item preview** follows the selected Cube item after each craft. It shows current values beside known roll ranges, separates final damage/defense totals, and labels corruption effects in red with **Corruption** text. Calculated totals are not assigned misleading raw roll ranges. **Compare last craft** opens the saved before/after comparison. **Recent crafts** keeps the last ten material uses separate, even on the same equipment.

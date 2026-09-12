@@ -27,6 +27,30 @@ assert.equal(validateCraft(r('satanic_crystal'),mixed).target,clean,'skip the fi
 assert.equal(recipeContext(r('satanic_crystal'),mixed).rank,0);
 assert.equal(recipeContext(r('cleanse_prophet'),[stack(weapon({r:1}))]).rank,1,'cleansing is relevant to corrupted equipment');
 assert.equal(recipeContext(r('cleanse_prophet'),[stack(weapon())]).dimmed,true);
+const removeCrystal=r('remove_satanic_crystal');
+for(const q of [1,2]) {
+  const contents=[stack(weapon({q}))],before=JSON.stringify(contents);
+  const context=recipeContext(removeCrystal,contents);
+  assert.equal(context.suggested,true,'Both Crystal affixes and bonus sockets suggest removal');
+  assert.equal(context.ready,false,'Suggested does not mean materials are already supplied');
+  assert.equal(context.dimmed,false);
+  assert.equal(JSON.stringify(contents),before,'Suggestion cannot edit items or consume materials');
+  const supplied=[...contents,...removeCrystal.ingredients.filter(i=>i.itemId!=null).map(i=>stack(sim.makeItem(i.itemType,i.itemId),i.amount))];
+  assert.equal(recipeContext(removeCrystal,supplied).suggested,true);
+  assert.equal(recipeContext(removeCrystal,supplied).ready,true);
+}
+for(const contents of [[],[stack(weapon())],[stack(weapon({q:1,t:1}))],[stack(weapon({q:1,r:1}))],[stack(weapon({q:1}),0)]])
+  assert.equal(recipeContext(removeCrystal,contents).suggested,false,'Absent, mirrored, corrupted or consumed targets cannot advertise removal');
+assert.equal(recipeContext(r('cleanse_prophet'),[stack(weapon({r:1,q:1}))]).suggested,true,'Clean corruption before removing a Crystal effect');
+assert.equal(recipeContext(r('cleanse_angel'),[stack(weapon({r:1}))]).suggested,false,'Wrong Wisdom must not be suggested');
+const angelRow=sim.catalog.rows.find(x=>x.name==='Mask of the Celestial');
+assert.ok(angelRow);
+const angel=sim.makeItem(angelRow.cls,angelRow.b,{a:123456,c:1,r:1,q:1},{row:angelRow});
+assert.equal(recipeContext(r('cleanse_angel'),[stack(angel)]).suggested,true);
+assert.equal(recipeContext(r('cleanse_prophet'),[stack(angel)]).suggested,false);
+assert.equal(recipeContext(removeCrystal,[stack(angel)]).suggested,false);
+assert.equal(recipeContext(removeCrystal,[stack(weapon()),stack(weapon({q:1}))]).suggested,true,'Find an eligible item even when it is not first');
+assert.equal(recipeContext(r('satanic_crystal'),[stack(weapon()),crystal]).suggested,false,'Other ready crafts retain their ordinary rank');
 assert.equal(recipeContext(r('satanic_crystal'),[crystal]).dimmed,true,'a reagent alone must not advertise an absent target');
 const fragment=sim.recipes.find(x=>x.mechanic==='create'&&x.ingredients.length===1&&/Gypsy.*Fragment/i.test(x.ingredients[0].name));
 const fragmentStack=stack(sim.makeItem(fragment.ingredients[0].itemType,fragment.ingredients[0].itemId),1);

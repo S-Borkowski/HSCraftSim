@@ -6,7 +6,7 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {Sim} from '../engine/index.js';
 import {packItem,findPosition} from '../engine/session.js';
-import {prepareIngredients} from '../engine/craft_action.js';
+import {prepareIngredients,runCraftAction} from '../engine/craft_action.js';
 const cli=process.env.AGENT_BROWSER_CLI;
 assert.ok(cli,'Set AGENT_BROWSER_CLI to the installed CLI JavaScript entry point.');
 const base=process.argv[2];assert.ok(/^http:\/\/127\.0\.0\.1:\d+\//.test(base),'Use a local test server.');
@@ -42,6 +42,75 @@ function check(name,fn){fn();reports.push({name,ok:true});console.log('PASS '+na
 try {
   browser('open',base);idle();browser('set','viewport','1366','768');
   browser('screenshot',path.join(dir,'startup.png'));
+  check('A Crystal craft surfaces its removal recipe; removal and Undo update the suggestion without rerolling',()=>{
+    const crystal=recipe('satanic_crystal'),remove=recipe('remove_satanic_crystal');
+    const initial=state(crystal,[stack(armor())]);
+    let seed=1;
+    for(;seed<=50;seed++){
+      const supplied=prepareIngredients(sim,crystal,initial.stacks,{columns:9,rows:6}).stacks;
+      const result=runCraftAction(sim,crystal,{...initial,stacks:supplied,rng:seed});
+      if(result.state.history[0]?.afterSnapshot?.crystal===1)break;
+    }
+    assert.ok(seed<=50);load({...initial,rng:seed});
+    browser('click','#dock-prepare');idle();
+    const before=saved();for(const s of before.stacks)s.versions??=[];
+    browser('click','#transmute');idle();
+    const first=saved();assert.equal(first.history[0].afterSnapshot.crystal,1);
+    const firstRecipe=()=>evaluate(`Number(document.querySelector('#recipe-list [data-recipe]').dataset.recipe)`);
+    assert.equal(firstRecipe(),remove.index);
+    assert.match(evaluate(`document.querySelector('#recipe-list .recipe-group-title').textContent`),/Suggested next step/);
+    assert.equal(saved().recipe,crystal.index,'Suggestion must not silently switch the active recipe');
+    assert.equal(evaluate(`document.querySelectorAll('#recipe-list [data-recipe="${remove.index}"]').length`),1);
+    browser('screenshot',path.join(dir,'crystal-next-step.png'));
+    browser('press','Control+z');idle();assert.deepEqual(saved(),before);
+    assert.doesNotMatch(evaluate(`document.querySelector('#recipe-list').textContent`),/Suggested next step/);
+    browser('click','#transmute');idle();
+    assert.deepEqual(saved().history[0].afterSnapshot,first.history[0].afterSnapshot,'Undo and retry must keep the same seeded outcome');
+    assert.equal(saved().rng,first.rng);
+    browser('dblclick',`.game-recipe[data-recipe="${remove.index}"]`);idle();
+    assert.equal(firstRecipe(),remove.index);assert.equal(saved().history.length,1);
+    browser('click','#transmute');idle();assert.equal(saved().history[0].afterSnapshot.crystal,0);
+    assert.doesNotMatch(evaluate(`document.querySelector('#recipe-list').textContent`),/Suggested next step/);
+    browser('press','Control+z');idle();assert.equal(firstRecipe(),remove.index);
+    browser('click','#recipes-open');
+    assert.equal(evaluate(`Number(document.querySelector('#recipes-dialog [data-recipe]').dataset.recipe)`),remove.index);
+    browser('press','Escape');
+    const restored=saved();load(restored,true);assert.equal(firstRecipe(),remove.index);
+  });
+  check('Cleanup suggestions precede other ready recipes, respect filters, and require an eligible target',()=>{
+    const remove=recipe('remove_satanic_crystal'),item=armor();item.def.q=2;
+    const merge=sim.recipes.find(r=>r.mechanic==='create'&&r.ingredients.length===1&&/Gypsy.*Fragment/i.test(r.ingredients[0].name));
+    const ingredient=merge.ingredients[0],fragment=sim.makeItem(ingredient.itemType,ingredient.itemId);
+    const base=state(remove,[stack(item)]),position=findPosition(base.stacks,fragment,9,6);
+    base.stacks.push(stack(fragment,'fragments',ingredient.amount,position.x,position.y));
+    load(base);
+    assert.equal(evaluate(`Number(document.querySelector('#recipe-list [data-recipe]').dataset.recipe)`),remove.index);
+    assert.equal(evaluate(`document.querySelector('#recipe-list [data-recipe="${merge.index}"]').classList.contains('craft-ready')`),true);
+    browser('click','#recipes-ready');
+    assert.equal(evaluate(`!!document.querySelector('#recipe-list [data-recipe="${remove.index}"]')`),false,'Ready-only must not include missing supplies');
+    browser('click','#recipes-all');browser('fill','#recipe-search','Blessed Dice');
+    assert.equal(evaluate(`!!document.querySelector('#recipe-list [data-recipe="${remove.index}"]')`),false,'Suggestions must respect search');
+    browser('fill','#recipe-search','');
+    browser('click','#favorites');assert.equal(evaluate(`document.querySelectorAll('#recipe-list [data-recipe]').length`),0);
+    browser('click','#favorites');
+    const before=saved();browser('click','#clear-cube');idle();
+    assert.doesNotMatch(evaluate(`document.querySelector('#recipe-list').textContent`),/Suggested next step/);
+    browser('press','Control+z');idle();assert.deepEqual(saved(),before);
+    item.def.t=1;load(state(remove,[stack(item)]));
+    assert.doesNotMatch(evaluate(`document.querySelector('#recipe-list').textContent`),/Suggested next step/,'Mirrored gear cannot be cleaned');
+  });
+  check('Corruption prioritizes the correct Wisdom, before Crystal removal',()=>{
+    for(const [name,mechanic] of [["Harlequinn's Crest",'cleanse_prophet'],['Mask of the Celestial','cleanse_angel']]){
+      const row=sim.catalog.rows.find(r=>r.name===name),item=sim.makeItem(row.cls,row.b,{a:123456,c:1,q:1,r:1},{row});
+      const wisdom=recipe(mechanic),remove=recipe('remove_satanic_crystal');
+      load(state(recipe('satanic_crystal'),[stack(item)]));
+      assert.equal(evaluate(`Number(document.querySelector('#recipe-list [data-recipe]').dataset.recipe)`),wisdom.index);
+      assert.equal(evaluate(`document.querySelector('#recipe-list [data-recipe="${remove.index}"]').classList.contains('dimmed')`),true);
+      browser('dblclick',`.game-recipe[data-recipe="${wisdom.index}"]`);idle();
+      browser('click','#transmute');idle();assert.equal(saved().history[0].afterSnapshot.corrupted,false);
+      assert.equal(evaluate(`Number(document.querySelector('#recipe-list [data-recipe]').dataset.recipe)`),remove.index);
+    }
+  });
   check('Recipe double-click fills the Cube without crafting; repeated preparation is a no-op',()=>{
     const r=recipe('blessed_dice');load(state(r,[stack(armor())]));
     browser('fill','#recipe-search','Blessed Dice');

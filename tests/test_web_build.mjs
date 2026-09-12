@@ -42,7 +42,8 @@ try{
       const url=new URL(match[1],base);
       if(url.origin!==new URL(origin).origin){
         assert.equal(url.protocol,'https:','External links must use HTTPS');
-        assert.ok(['https://discord.gg/3wWfYubgb3','https://discord.gg/fDtXAQu5c3'].includes(url.href),'Unexpected external link');
+        assert.equal(report.edition,'community','Website builds must not contain external community links');
+        assert.equal(url.href,'https://discord.gg/3wWfYubgb3','Unexpected external link');
         continue;
       }
       assert.ok(url.pathname.startsWith(mount));

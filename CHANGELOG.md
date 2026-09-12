@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.4
+
+- Community edition keeps Falor's creator credit and Discord, with the previous host card and host Discord removed from About and the footer.
+- Added a separate Website edition with Falor's creator credit and no Discord links. Both editions use the same crafting engine and can be generated into separate local folders.
+- Updated desktop and browser credit checks for both editions.
+
+- Show eligible Crystal-removal and Wisdom recipes at the top of the recipe book under Suggested next step, including when their materials still need to be added. Recipe filters, craft selection and Undo randomness are preserved.
+
 ## 1.0.3
 
 - Moved Add ingredients and Craft together directly below the Cube, with a visible eligibility reason and a secondary Batch craft menu.

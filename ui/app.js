@@ -162,7 +162,10 @@ function renderRecipes(){
     });return {title,rows};
   });
   const ordered=groups.flatMap(g=>g.rows);
-  const sections=state.stacks.length?['Ready to craft','For items in your Cube','Other recipes'].map((title,rank)=>({title,rows:ordered.filter(r=>contexts.get(r.index).rank===rank)})):groups;
+  const sections=state.stacks.length?[
+    {title:'Suggested next step',rows:ordered.filter(r=>contexts.get(r.index).suggested)},
+    ...['Ready to craft','For items in your Cube','Other recipes'].map((title,rank)=>({title,rows:ordered.filter(r=>!contexts.get(r.index).suggested&&contexts.get(r.index).rank===rank)}))
+  ]:groups;
   $('#recipe-list').innerHTML=sections.filter(g=>g.rows.length).map(({title,rows})=>`<div class="recipe-group-title">${title} <span>${rows.length}</span></div>`+rows.map(r=>recipeCardHtml(r,{selected:r.index===state.recipe,favorite:state.favorites.includes(r.index),unavailable:!!UNSUPPORTED[r.mechanic],summary:subtitle(r),context:contexts.get(r.index)})).join('')).join('')||'<div class="empty-state">No recipes found. Try a different search or category.</div>';
   if(cubeChanged)$('#recipe-list').scrollTop=0;
 }

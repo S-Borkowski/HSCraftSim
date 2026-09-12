@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
+import { readEdition } from './editions.mjs';
 
 const root=path.resolve(fileURLToPath(new URL('..',import.meta.url)));
 const output=path.join(root,'dist');
@@ -26,6 +27,7 @@ const data=Buffer.from(JSON.stringify(runtime));
 const compressed=gzipSync(data,{level:9});
 const files=new Map();
 const html=await read('ui/index.html');
+const edition=readEdition(html.toString());
 const styles=[...html.toString().matchAll(/<link rel="stylesheet" href="([^"]+)">/g)].map(m=>m[1]);
 const css=(await Promise.all(styles.map(name=>read(`ui/${name}`)))).map(b=>b.toString()).join('\n');
 files.set('ui/app.css',Buffer.from(css));
@@ -63,6 +65,6 @@ const index=html.toString()
   .replace('data-module="app.js"','data-module="app.js" data-bundle="../data/runtime.bin"')
   .replace('A local Hero Siege Cube crafting simulator.','An interactive Hero Siege Cube crafting simulator.');
 await writeFile(path.join(output,'index.html'),index);
-const report={version:(await json('package.json')).version,revision,files:files.size+1,itemImages:sprites.size,sourceDataBytes:sourceBytes,compressedDataBytes:compressed.length,dataReductionPercent:Number((100*(1-compressed.length/sourceBytes)).toFixed(1)),totalBytes:[...files.values()].reduce((n,b)=>n+b.length,Buffer.byteLength(index))};
+const report={version:(await json('package.json')).version,edition,revision,files:files.size+1,itemImages:sprites.size,sourceDataBytes:sourceBytes,compressedDataBytes:compressed.length,dataReductionPercent:Number((100*(1-compressed.length/sourceBytes)).toFixed(1)),totalBytes:[...files.values()].reduce((n,b)=>n+b.length,Buffer.byteLength(index))};
 await writeFile(path.join(output,'build-report.json'),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report,null,2));
